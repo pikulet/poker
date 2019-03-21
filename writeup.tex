@@ -29,30 +29,15 @@
 % Patel-Schneider, of AT\&T Bell Laboratories collaborated on their
 % preparation.
 
-% These instructions can be modified and used in other conferences as long
-% as credit to the authors and supporting agencies is retained, this notice
-% is not changed, and further modification or reuse is not restricted.
-% Neither Shirley Jowell nor Peter F. Patel-Schneider can be listed as
-% contacts for providing assistance without their prior permission.
 
-% To use for other conferences, change references to files and the
-% conference appropriate and use other authors, contacts, publishers, and
-% organizations.
-% Also change the deadline and address for returning papers and the length and
-% page charge instructions.
-% Put where the files are available in the appropriate places.
-
-\title{Poker Project - Team \#AAAA}
-
-
-% Multiple author syntax (remove the single-author syntax above and the \iffalse ... \fi here)
+\title{Poker Project - Team 47: Modelling Aggressiveness and Looseness of Poker Play}
 
 \author{
-Alice Pokerton, Bob Folderson,  Claire Royal, Divesh Twopairs
+AUYOK Sean, CAI Jiaxiu, CHIK Cheng Yao, Joyce YEO Shuhui, ZHUANG Yihui
 \\ 
 National University of Singapore\\
 %
-first,second,third,fourth@nus.edu.sg
+sean.auyok,e0201975,chikchengyao,joyceyeo,yihui@u.nus.edu
 }
 % If your authors do not fit in the default space, you can increase it 
 % by uncommenting the following (adjust the "2.5in" size to make it fit
@@ -65,74 +50,18 @@ first,second,third,fourth@nus.edu.sg
 
 \section{Introduction}
 
-The introduction must contain a concise description of the problem. In particular it should describe
+In a stochastic game like Limit Poker, how far can we exploit imperfect information to maximise our gains?
+
 \begin{enumerate}
-	\item What does your agent do (i.e. what is the problem?)
+	\item Functionality, the agent should be rational and be at least able to recognise statistically optimal hole cards which are worth investing in. However, chance alone does not make our agent a winner. In Poker, a core strategy is the ability to model and subsequently predict how an opponent is behaving. This enhancement allows our agent to gain an advantage over randomness, and leave the table with more money.
 	\item Why did you choose this implementation (i.e. why should the reader be interested?)
 	\item What is the result that you achieved? (i.e. why should the reader believe you?)
 \end{enumerate}
 It should be about a column long. 
-\subsection{Length of Papers}
-
-Papers should be four pages long, excluding references. References can take up an unlimited number of pages. Note that only references can appear on the extra page. Sections such as conclusions or acknowledgments should not be placed on the extra references page.
-You may include an appendix with extra results, to be read at the staff's discretion.
 
 \subsection{Word Processing Software}
 
-As detailed below, IJCAI has prepared and made available a set of
-\LaTeX{} macros and a Microsoft Word template for use in formatting
-your paper. If you are using some other word processing software (such
-as WordPerfect, etc.), please follow the format instructions given
-below and ensure that your final paper looks as much like this sample
-as possible.
-
-{\bf Note that I did not edit the word document, and it still contains the original IJCAI formatting instructions. Please ignore those!}
-
-\section{Style and Format}
-
-\LaTeX{} and Word style files that implement these instructions
-can be retrieved electronically. (See Appendix~\ref{stylefiles} for
-instructions on how to obtain these files.)
-
-\subsection{Layout}
-
-Print manuscripts two columns to a page, in the manner in which these
-instructions are printed. The exact dimensions for pages are:
-\begin{itemize}
-\item left and right margins: .75$''$
-\item column width: 3.375$''$
-\item gap between columns: .25$''$
-\item top margin---first page: 1.375$''$
-\item top margin---other pages: .75$''$
-\item bottom margin: 1.25$''$
-\item column height---first page: 6.625$''$
-\item column height---other pages: 9$''$
-\end{itemize}
-
-All measurements assume an 8-1/2$''$ $\times$ 11$''$ page size. For
-A4-size paper, use the given top and left margins, column width,
-height, and gap, and modify the bottom and right margins as necessary.
-
-\subsection{Format of Electronic Manuscript}
-
-For the production of the electronic manuscript, you must use Adobe's
-{\em Portable Document Format} (PDF). A PDF file can be generated, for
-instance, on Unix systems using {\tt ps2pdf} or on Windows systems
-using Adobe's Distiller. There is also a website with free software
-and conversion services: {\tt http://www.ps2pdf.com/}. For reasons of
-uniformity, use of Adobe's {\em Times Roman} font is strongly suggested. In
-\LaTeX2e{}, this is accomplished by putting
-\begin{quote} 
-\mbox{\tt $\backslash$usepackage\{times\}}
-\end{quote}
-in the preamble.\footnote{You may want also to use the package {\tt
-latexsym}, which defines all symbols known from the old \LaTeX{}
-version.}
-  
-Additionally, it is of utmost importance to specify the American {\bf
-letter} format (corresponding to 8-1/2$''$ $\times$ 11$''$) when
-formatting the paper. When working with {\tt dvips}, for instance, one
-should specify {\tt -t letter}.
+some text
 
 \subsection{Title and Author Information}
 
@@ -266,14 +195,6 @@ the Bib\TeX{} files are {\tt named.bst} and {\tt ijcai18.bib}. The
 style file is for version 0.99c of Bib\TeX{} ({\em not} version
 0.98i). The {\tt ijcai18.sty} file is the same as the {\tt
 ijcai07.sty} file used for IJCAI--07.
-
-The Microsoft Word style file consists of a single file, {\tt
-ijcai18.doc}. This template is the same as the one used for
-IJCAI--07.
-
-These Microsoft Word and \LaTeX{} files contain the source of the
-present document and may serve as a formatting sample.  
-
 
 %% The file named.bst is a bibliography style file for BibTeX 0.99c
 \bibliographystyle{named}
