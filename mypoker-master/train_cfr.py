@@ -6,8 +6,8 @@ try:
 except ImportError:
     print('!!! Install tqdm library for better progress information !!!\n')
 
-from cfr.cfr import Cfr
-from cfr.game_tree import HoleCardsNode, ActionNode, BoardCardsNode
+from cfr_methods.cfr import Cfr
+from cfr_methods.game_tree import HoleCardsNode, ActionNode, BoardCardsNode
 
 """Trains strategy for poker agent using CFR algorithm and writes it to specified file.
 
@@ -19,10 +19,18 @@ python train.py {iterations} {strategy_output_path}
 """
 
 
+# def _action_to_shorthand(action):
+#     if action == Action.FOLD:
+#         return 'f'
+#     elif action == Action.CALL:
+#         return 'c'
+#     else:
+#         return 'r'
+
 def _action_to_shorthand(action):
-    if action == Action.FOLD:
+    if action == 0:
         return 'f'
-    elif action == Action.CALL:
+    elif action == 1:
         return 'c'
     else:
         return 'r'

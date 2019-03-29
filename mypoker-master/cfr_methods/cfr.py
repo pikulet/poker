@@ -3,7 +3,7 @@ import random
 from functools import reduce
 
 
-import cfr.constants as const
+import constants as const
 from pypokerengine.engine.deck import Deck
 
 from cfr.build_tree import GameTreeBuilder
