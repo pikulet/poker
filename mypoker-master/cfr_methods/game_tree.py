@@ -1,4 +1,4 @@
-import constants as const
+from cfr_methods import constants as const
 
 
 def _tree_str_rec(root, offset):
@@ -74,5 +74,3 @@ class ActionNode(Node):
         self.strategy = [0] * const.NUM_ACTIONS
         self.strategy_sum = [0] * const.NUM_ACTIONS
         self.average_strategy = None
-
-my_node = ActionNode(1,2)
