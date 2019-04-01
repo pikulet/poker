@@ -6,9 +6,9 @@ from functools import reduce
 import constants as const
 from pypokerengine.engine.deck import Deck
 
-from cfr.build_tree import GameTreeBuilder
-from cfr.game_tree import HoleCardsNode, TerminalNode, ActionNode, BoardCardsNode
-from cfr.hand_evaluation import get_winners
+from build_tree import GameTreeBuilder
+from game_tree import HoleCardsNode, TerminalNode, ActionNode, BoardCardsNode
+from hand_evaluation import get_winner
 
 try:
     from tqdm import tqdm
@@ -130,12 +130,20 @@ class Cfr:
 
         flattened_board_cards = reduce(
             lambda res, cards: res + list(cards), board_cards, [])
-        player_cards = [(list(hole_cards[p]) + flattened_board_cards) if not players_folded[p] else None
-                        for p in range(player_count)]
-        winners = get_winners(player_cards)
-        winner_count = len(winners)
-        value_per_winner = sum(pot_commitment) / winner_count
-        return [value_per_winner - pot_commitment[p] if p in winners else -pot_commitment[p]
+        # player_cards = [(list(hole_cards[p]) + flattened_board_cards) if not players_folded[p] else None
+        #                 for p in range(player_count)]
+        # winners = get_winners(player_cards)
+        # winner_count = len(winners)
+        # value_per_winner = sum(pot_commitment) / winner_count
+        # return [value_per_winner - pot_commitment[p] if p in winners else -pot_commitment[p]
+        #         for p in range(player_count)]
+        if players_folded[0]:
+            winner = 1
+        elif players_folded[1]:
+            winner = 0
+        else:
+            winner = get_winner(hole_cards[0], hole_cards[1], flattened_board_cards)
+        return [sum(pot_commitment) - pot_commitment[p] if p == winner else -pot_commitment[p]
                 for p in range(player_count)]
 
     def _cfr_hole_cards(self, nodes, reach_probs, hole_cards, board_cards, deck, players_folded):
@@ -163,12 +171,12 @@ class Cfr:
     def _update_node_strategy(node, realization_weight):
         """Update node strategy by normalizing regret sums."""
         normalizing_sum = 0
-        for a in range(NUM_ACTIONS):
+        for a in range(const.NUM_ACTIONS):
             node.strategy[a] = node.regret_sum[a] if node.regret_sum[a] > 0 else 0
             normalizing_sum += node.strategy[a]
 
         num_possible_actions = len(node.children)
-        for a in range(NUM_ACTIONS):
+        for a in range(const.NUM_ACTIONS):
             if normalizing_sum > 0:
                 node.strategy[a] /= normalizing_sum
             elif a in node.children:
