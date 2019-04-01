@@ -92,7 +92,7 @@ class Cfr:
             self._cfr(
                 [self.game_tree] * self.player_count,
                 [1] * self.player_count,
-                None, [], deck,
+                None, [], deck.deck,
                 [False] * self.player_count)
 
         Cfr._calculate_tree_average_strategy(self.game_tree)
@@ -149,7 +149,8 @@ class Cfr:
     def _cfr_hole_cards(self, nodes, reach_probs, hole_cards, board_cards, deck, players_folded):
         num_hole_cards = nodes[0].card_count
         next_hole_cards = []
-        next_deck = list(deck)
+        # next_deck = list(deck)
+        next_deck = deck
         for p in range(self.player_count):
             next_hole_cards.append(tuple(sorted(next_deck[:num_hole_cards])))
             next_deck = next_deck[num_hole_cards:]
@@ -172,7 +173,7 @@ class Cfr:
         next_hands = [list(hole_cards[p]).extend(list(selected_board_cards)) for p in range(self.player_count)]
         next_hand_buckets = []
         for p in range(self.player_count):
-            next_hand_buckets.append(get_hand_bucket(list(next_hands[p])))
+            next_hand_buckets.append(get_hand_bucket(next_hands[p]))
 
         next_nodes = [node.children[next_hand_buckets[p]]
                       for p, node in enumerate(nodes)]

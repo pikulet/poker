@@ -12,7 +12,7 @@ def get_winner(hole_card_1, hole_card_2, community_cards):
         return 1
 
 def get_hand_bucket(hand):
-    return random.randint(1, 6)
+    return random.randint(1, 5)
 
 # def get_winners(hands):
 #     """Evaluate hands of players and determine winners.

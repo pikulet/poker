@@ -1,4 +1,4 @@
-from cfr_methods import constants as const
+import constants as const
 
 
 def _tree_str_rec(root, offset):
@@ -50,24 +50,28 @@ class Node(object):
 
 class TerminalNode(Node):
     def __init__(self, parent, pot_commitment):
+        # print('a terminal node is constructed')
         super(TerminalNode, self).__init__(parent)  # Add args to super method to adapt to python 2
         self.pot_commitment = pot_commitment
 
 
 class HoleCardsNode(Node):
     def __init__(self, parent, card_count):
+        # print('a hole node is constructed')
         super(HoleCardsNode, self).__init__(parent)
         self.card_count = card_count
 
 
 class BoardCardsNode(Node):
     def __init__(self, parent, card_count):
+        # print('a board node is constructed')
         super(BoardCardsNode, self).__init__(parent)
         self.card_count = card_count
 
 
 class ActionNode(Node):
     def __init__(self, parent, player):
+        # print('an action node is constructed')
         super(ActionNode, self).__init__(parent)
         self.player = player
         self.regret_sum = [0] * const.NUM_ACTIONS

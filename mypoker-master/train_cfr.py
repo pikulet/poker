@@ -1,6 +1,7 @@
 import sys
 from pypokerengine.api.emulator import Action
-
+# from tqdm import tqdm
+# for i in tqdm(range(10000)):
 try:
     from tqdm import tqdm
 except ImportError:
@@ -43,7 +44,8 @@ def _get_strategy_lines(lines, node, prefix=''):
             new_prefix = prefix
             if new_prefix and not new_prefix.endswith(':'):
                 new_prefix += ':'
-            new_prefix += ':'.join([str(card) for card in key]) + ':'
+            # new_prefix += ':'.join([str(card) for card in key]) + ':'
+            new_prefix += str(key) + ':'
             _get_strategy_lines(lines, child_node, new_prefix)
     elif node_type == ActionNode:
         node_strategy_str = ' '.join([str(prob) for prob in node.average_strategy])
@@ -89,13 +91,22 @@ def _write_strategy(game_tree, iterations, output_path):
         _write_to_output_file(output_path, strategy_file_lines_sorted)
 
 
-if __name__ == "__main__":
-    if len(sys.argv) < 3:
-        print("Usage {iterations} {strategy_output_path}")
-        sys.exit(1)
+# if __name__ == "__main__":
+#     if len(sys.argv) < 3:
+#         print("Usage {iterations} {strategy_output_path}")
+#         sys.exit(1)
+#
+#     iterations = int(sys.argv[1])
+#     output_path = sys.argv[2]
+#
+#     cfr = Cfr()
+#     cfr.train(iterations)
+#
+#     _write_strategy(cfr.game_tree, iterations, output_path)
 
-    iterations = int(sys.argv[1])
-    output_path = sys.argv[2]
+if __name__ == "__main__":
+    iterations = 10
+    output_path = './training_output'
 
     cfr = Cfr()
     cfr.train(iterations)
