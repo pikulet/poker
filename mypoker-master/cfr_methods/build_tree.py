@@ -22,7 +22,7 @@ class GameTreeBuilder:
 
             # Round properties
             self.rounds_left = const.TOTAL_ROUNDS
-            self.round_raise_count = 0
+            self.round_raise_count = [0, 0]
             self.players_acted = 0
             self.current_player = const.FIRST_PLAYER
 
@@ -30,7 +30,6 @@ class GameTreeBuilder:
             """Get copy of this state for new game round."""
             res = copy.deepcopy(self)
             res.rounds_left -= 1
-            res.round_raise_count = 0
             res.players_acted = 0
             return res
 
@@ -128,7 +127,7 @@ class GameTreeBuilder:
         valid_actions = [1]
         if not bets_settled:
             valid_actions.append(0)
-        if game_state.round_raise_count < self.game.get_max_raises(round_index):
+        if game_state.round_raise_count[current_player] < const.MAX_RAISES[current_player]:
             valid_actions.append(2)
         for a in valid_actions:
             next_game_state = game_state.next_move_state()
@@ -139,7 +138,7 @@ class GameTreeBuilder:
             elif a == 1:
                 next_game_state.pot_commitment[current_player] = max_pot_commitment
             elif a == 2:
-                next_game_state.round_raise_count += 1
+                next_game_state.round_raise_count[current_player] += 1
                 next_game_state.pot_commitment[current_player] = \
                     max_pot_commitment + const.RAISE_SIZE
 
