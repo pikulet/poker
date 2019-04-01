@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f218e518-1000-4f61-95dd-bcb8f523d1c3" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/mypoker-master/cfr_methods/cfr.py" beforeDir="false" afterPath="$PROJECT_DIR$/mypoker-master/cfr_methods/cfr.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mypoker-master/cfr_methods/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/mypoker-master/cfr_methods/constants.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mypoker-master/cfr_methods/game_tree.py" beforeDir="false" afterPath="$PROJECT_DIR$/mypoker-master/cfr_methods/game_tree.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mypoker-master/cfr_methods/hand_evaluation.py" beforeDir="false" afterPath="$PROJECT_DIR$/mypoker-master/cfr_methods/hand_evaluation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mypoker-master/train_cfr.py" beforeDir="false" afterPath="$PROJECT_DIR$/mypoker-master/train_cfr.py" afterDir="false" />
-    </list>
+    <list default="true" id="f218e518-1000-4f61-95dd-bcb8f523d1c3" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,9 +46,22 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/mypoker-master/training_output">
-          <provider selected="true" editor-type-id="text-editor" />
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <caret column="26" selection-start-column="26" selection-end-column="26" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/mypoker-master/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="60">
+              <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
+            </state>
+          </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
@@ -127,6 +134,8 @@
         <option value="$PROJECT_DIR$/mypoker-master/cfr_methods/hand_evaluation.py" />
         <option value="$PROJECT_DIR$/mypoker-master/train_cfr.py" />
         <option value="$PROJECT_DIR$/mypoker-master/cfr_methods/constants.py" />
+        <option value="$PROJECT_DIR$/mypoker-master/.gitignore" />
+        <option value="$PROJECT_DIR$/mypoker-master/training_output" />
       </list>
     </option>
   </component>
@@ -157,11 +166,6 @@
               <item name="poker" type="462c0819:PsiDirectoryNode" />
               <item name="mypoker-master" type="462c0819:PsiDirectoryNode" />
               <item name="cfr_methods" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="poker" type="b2602c69:ProjectViewProjectNode" />
-              <item name="poker" type="462c0819:PsiDirectoryNode" />
-              <item name="writeup" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -331,13 +335,13 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32891566" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49964765" visible="true" weight="0.32891566" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49964765" weight="0.32891566" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32891566" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.32891566" />
-      <window_info anchor="bottom" id="Terminal" order="8" weight="0.32891566" />
+      <window_info anchor="bottom" id="Terminal" order="8" visible="true" weight="0.32891566" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5003524" side_tool="true" weight="0.32891566" />
       <window_info anchor="bottom" id="Python Console" order="10" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -385,9 +389,6 @@
           </folding>
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mypoker-master/.gitignore">
-      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/mypoker-master/pypokerengine/utils/timeout_decorator.py">
       <provider selected="true" editor-type-id="text-editor" />
@@ -584,7 +585,18 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mypoker-master/training_output">
-      <provider selected="true" editor-type-id="text-editor" />
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="26" selection-start-column="26" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mypoker-master/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
+        </state>
+      </provider>
     </entry>
   </component>
 </project>
