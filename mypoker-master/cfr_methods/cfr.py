@@ -8,7 +8,7 @@ from pypokerengine.engine.deck import Deck
 
 from build_tree import GameTreeBuilder
 from game_tree import HoleCardsNode, TerminalNode, ActionNode, BoardCardsNode
-from hand_evaluation import get_winner
+from hand_evaluation import get_winner, get_hand_bucket
 
 try:
     from tqdm import tqdm
@@ -142,7 +142,7 @@ class Cfr:
         elif players_folded[1]:
             winner = 0
         else:
-            winner = get_winner(hole_cards[0], hole_cards[1], flattened_board_cards)
+            winner = get_winner(list(hole_cards[0]), list(hole_cards[1]), flattened_board_cards)
         return [sum(pot_commitment) - pot_commitment[p] if p == winner else -pot_commitment[p]
                 for p in range(player_count)]
 
@@ -154,14 +154,27 @@ class Cfr:
             next_hole_cards.append(tuple(sorted(next_deck[:num_hole_cards])))
             next_deck = next_deck[num_hole_cards:]
 
-        next_nodes = [node.children[next_hole_cards[p]]
+        # get children nodes with bucket numbers as keys
+        next_hand_buckets = []
+        for p in range(self.player_count):
+            next_hand_buckets.append(get_hand_bucket(list(next_hole_cards[p])))
+
+        next_nodes = [node.children[next_hand_buckets[p]]
                       for p, node in enumerate(nodes)]
+
         return self._cfr(next_nodes, reach_probs, next_hole_cards, board_cards, next_deck, players_folded)
 
     def _cfr_board_cards(self, nodes, reach_probs, hole_cards, board_cards, deck, players_folded):
         num_board_cards = nodes[0].card_count
         selected_board_cards = tuple(sorted(deck[:num_board_cards]))
-        next_nodes = [node.children[selected_board_cards]
+
+        # get children nodes with bucket numbers as keys
+        next_hands = [list(hole_cards[p]).extend(list(selected_board_cards)) for p in range(self.player_count)]
+        next_hand_buckets = []
+        for p in range(self.player_count):
+            next_hand_buckets.append(get_hand_bucket(list(next_hands[p])))
+
+        next_nodes = [node.children[next_hand_buckets[p]]
                       for p, node in enumerate(nodes)]
         return self._cfr(next_nodes, reach_probs,
                          hole_cards, board_cards + [selected_board_cards], deck[num_board_cards:],
