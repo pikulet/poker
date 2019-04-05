@@ -2,6 +2,7 @@ import sys
 from pypokerengine.api.emulator import Action
 # from tqdm import tqdm
 # for i in tqdm(range(10000)):
+sys.path.append(".")
 try:
     from tqdm import tqdm
 except ImportError:
