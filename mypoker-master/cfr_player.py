@@ -1,13 +1,6 @@
 import random
-import sys
 from cfr_methods. hand_evaluation import get_hand_bucket
-
-
-
-
-
 from pypokerengine.players import BasePokerPlayer
-import random as rand
 import pprint
 
 class CfrPlayer(BasePokerPlayer):

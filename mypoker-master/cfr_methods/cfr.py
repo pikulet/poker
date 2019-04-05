@@ -1,5 +1,4 @@
 import operator
-import random
 from functools import reduce
 
 
@@ -65,12 +64,8 @@ class Cfr:
         """Run CFR for given number of iterations.
 
         The trained tree can be found by retrieving the game_tree
-        property from this object. The result strategy is stored
+        property from this object: self.game_tree. The result strategy is stored
         in average_strategy of each ActionNode in game tree.
-
-        This method can be called multiple times on one instance
-        to train more. This can be used for evaluation during training
-        and to make number of training iterations dynamic.
 
         Args:
             iterations (int): Number of iterations.
@@ -130,13 +125,6 @@ class Cfr:
 
         flattened_board_cards = reduce(
             lambda res, cards: res + list(cards), board_cards, [])
-        # player_cards = [(list(hole_cards[p]) + flattened_board_cards) if not players_folded[p] else None
-        #                 for p in range(player_count)]
-        # winners = get_winners(player_cards)
-        # winner_count = len(winners)
-        # value_per_winner = sum(pot_commitment) / winner_count
-        # return [value_per_winner - pot_commitment[p] if p in winners else -pot_commitment[p]
-        #         for p in range(player_count)]
         if players_folded[0]:
             winner = 1
         elif players_folded[1]:
@@ -149,7 +137,6 @@ class Cfr:
     def _cfr_hole_cards(self, nodes, reach_probs, hole_cards, board_cards, deck, players_folded):
         num_hole_cards = nodes[0].card_count
         next_hole_cards = []
-        # next_deck = list(deck)
         next_deck = deck
         for p in range(self.player_count):
             next_hole_cards.append(tuple(sorted(next_deck[:num_hole_cards])))

@@ -44,18 +44,6 @@ class GameTreeBuilder:
         """Builds and returns the game tree."""
         deck = Deck().deck  # accessing the internal list of cards in the deck obj
 
-        # First generate hole cards node which is only generated once at the beginning of the game
-        # root = HoleCardsNode(None, const.NUM_HOLECARDS)
-        # num_hole_cards = const.NUM_HOLECARDS
-        # hole_card_combinations = itertools.combinations(range(len(deck)), num_hole_cards)
-        # for hole_cards_indexes in hole_card_combinations:
-        #     hole_cards = tuple(map(lambda i: deck[i], hole_cards_indexes))
-        #     next_deck = list(deck)
-        #     for hole_card_index in hole_cards_indexes:
-        #         del next_deck[hole_card_index]
-        #     game_state = GameTreeBuilder.GameState(next_deck)
-        #     # Start first game round with board cards node
-        #     self._generate_board_cards_node(root, hole_cards, game_state)
         root = HoleCardsNode(None, const.NUM_HOLECARDS)
         game_state = GameTreeBuilder.GameState(deck)
         for i in range(const.NUM_BUCKETS):
@@ -71,16 +59,6 @@ class GameTreeBuilder:
         else:
             new_node = BoardCardsNode(parent, num_board_cards)
             parent.children[child_key] = new_node
-
-            # deck = game_state.deck
-            # board_card_combinations = itertools.combinations(range(len(deck)), num_board_cards)
-            #
-            # for board_cards_idxs in board_card_combinations:
-            #     next_game_state = copy.deepcopy(game_state)
-            #     for board_card_index in board_cards_idxs:
-            #         del next_game_state.deck[board_card_index]
-            #     board_cards = tuple(map(lambda i: deck[i], board_cards_idxs))
-            #     self._generate_action_node(new_node, board_cards, next_game_state)
 
             next_game_state = copy.deepcopy(game_state)
             for i in range(const.NUM_BUCKETS):
@@ -105,12 +83,8 @@ class GameTreeBuilder:
             if rounds_left > 1 and sum(players_folded) < player_count - 1:
                 # Start next game round with new board cards node
                 next_game_state = game_state.next_round_state()
-                # next_game_state.current_player = \
-                #     self.game.get_first_player(self.game.get_num_rounds() - rounds_left + 1)
-
                 # small blind always speaks first at the start of each street
                 next_game_state.current_player = 0
-
                 self._generate_board_cards_node(parent, child_key, next_game_state)
             else:
                 # This game tree branch ended, close it with terminal node
