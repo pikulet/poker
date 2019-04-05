@@ -54,7 +54,7 @@ class CfrPlayer(BasePokerPlayer):
 
     if len(round_state['community_card']) != self.num_com_cards:
         self.num_com_cards = len(round_state['community_card'])
-        current_hand_bucket = get_hand_bucket(hole_card.append(round_state['community_card']))
+        current_hand_bucket = get_hand_bucket(hole_card + round_state['community_card'])
         self.info_set += str(current_hand_bucket)
         self.info_set += ':'
 

@@ -157,7 +157,7 @@ class Cfr:
         selected_board_cards = tuple(sorted(deck[:num_board_cards]))
 
         # get children nodes with bucket numbers as keys
-        next_hands = [list(hole_cards[p]).extend(list(selected_board_cards)) for p in range(self.player_count)]
+        next_hands = [list(hole_cards[p]) + list(selected_board_cards) for p in range(self.player_count)]
         next_hand_buckets = []
         for p in range(self.player_count):
             next_hand_buckets.append(get_hand_bucket(next_hands[p]))
