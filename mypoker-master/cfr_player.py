@@ -78,7 +78,8 @@ class CfrPlayer(BasePokerPlayer):
     """
     call_action_info = valid_actions[0]
     if len(valid_actions) == 2:
-        if strategy[1] < strategy[0]:
+        choice = random.random()
+        if choice > strategy[0] + strategy[2] / 2:
             call_action_info = valid_actions[1]
     elif len(valid_actions) == 3:
       choice = random.random()
