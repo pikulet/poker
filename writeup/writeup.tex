@@ -93,18 +93,34 @@ A simple way to characterise player strategies is to consider betting behaviour 
 
 When a player receives a bad hand, they could continue playing or choose to fold. This behaviour can be defined on a tightness-looseness scale. A tight player only plays a small percentage of their hands, and folds otherwise. On the other hand, a loose player would choose to take risks and make bets based on the potential of the hand. Loose play is called bluffing, deceives the opponent into over-estimating the agent's hand strength. The opponents may fold as a result of this observation.
 
+Theoretically, a tight play aims to reduce losses in the case of bad hands. However, a very tight play would also mean that the chances to observe the opponent's behaviour is diminished.
+
 When a player receives a good hand, they could call/ check (keep the pot size stable) or raise their bets. This behaviour can be defined on a passiveness-aggressiveness scale. A passive player keeps their bets low and stable. On the other hand, an aggressive player will actively make raises to increase the game stakes. Passive play is another form of deceit, which leads opponents to under-estimate the hand strength, thereby continuing to place bets and raise the pot amount.
+
+An aggressive play style hopes to maximise the winnings when the hands are strong. However, an over-aggressive play will also encourage opponents to fold, which again discards opportunities to observe opponent behaviour.
 
 An opponent's strategy at one point in time can then be represented as a 2-tuple of (tightness, aggressiveness). Note that this tuple merely represents an instantaneous strategy, and the opponent could change strategies over time because
 
-1. The opponent adapts their play to our agent's play style
-2. The opponent employs a team-based strategy where a coach sends out different players to the table depending on the play style our agent uses.
+\begin{enumerate}
+	\item The opponent adapts their play to our agent's play style
+	\item The opponent employs a team-based strategy where a coach sends out different players to the table depending on the play style our agent uses.
+\end{enumerate}
+
+\subsubsection{Heuristic for Tightness and Aggressiveness}
+
+The opponent tightness can be approximated using the folding rate over multiple games. 
+
+The drawback to using the folding-rate heuristic is that a large number of games is needed to make a prediction. By the time these observations are made, the opponent may have already adopted a different play style.
+
+The opponent aggressiveness can be approximated using the raising rate. We make the assumption that when the opponent has a weak hand, they will only call or fold, and raising is only the result of relatively strong hands.
+
+Our agent incorporates these heuristics into its modelling of the opponent by saving the opponent's action history each round.
 
 \subsubsection{Approximating Towards Opponent Strategy}
 
 Given an opponent strategy, we hypothesise that approximating our strategy to be similar to the opponent would minimise our losses. We consider extreme cases to illustrate this point. 
 
-First, consider an opponent that is very tight in play, always folding until they receive a good hand. Suppose on the other hand, that we adopt a loose play and choose to make bets even when our hands are not as ideal. (expound on this)
+First, consider an opponent that is very tight in play, always folding until they receive a good hand. Suppose on the other hand, that we adopt a loose play and choose to make bets even when our hands are not as ideal. Suppose then, that the opponent obtains a very good hand $h_1$ and we obtain a very bad hand $h_2$. Our looseness will lead us to contribute an amount $x_1$ to the pot before eventually folding or losing during the showdown. By pure chance, there is an equally probability that the two hands are reversed, so the opponents has the very bad hand $h_2$ and we hold on the the very good hand $h_1$. Since the opponent has a tighter play, they would have a lower probability of putting money into the pot, and a higher probability of folding. We let the amount contributed by the opponent to the pot be $x_2$. Clearly, $x_2$, the expected loss by the tight opponent < $x_1$, the expected loss by our loose agent. In the case of tightness, it then makes sense to approximate our tightness to be close to that of the opponent.
 
 Alternatively, consider an opponent that is very aggressive in play, always raising when they receive a good hand. Suppose on the other hand that we adopt a passive play and choose to call or check even when our hands are very strong. (expound on this)
 
@@ -116,7 +132,7 @@ Our agent model generates a 3-tuple for the probability of playing each action (
 
 Some researchers employ purification techniques to overcome abstraction coarseness. These poker agents prefer the higher-probability actions and ignore actions that are unlikely to be played. In particular, Ganzfried and Sandholm found full purification to be the most effective. The full purification technique let the agent play the most-probable action with probability 1.
 
-However, such a strategy ... makes it predictable??
+However, such a strategy ... makes it predictable?? In particular, the deceit techniques of bluffing and trapping would be less effective. 
 
 \subsection{Predicting Play Styles}
 
