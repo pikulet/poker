@@ -52,7 +52,11 @@ sean.auyok,e0201975,chikchengyao,joyceyeo,yihui@u.nus.edu
 
 In a stochastic game like Limit Poker, how far can we exploit imperfect information to maximise our gains? 
 
+Win margin is important, not just about winning.
+
 Our poker agent is also placed under a time constraint for every action, so 
+
+limitations to making decisions
 
 \begin{enumerate}
 	\item Functionality, the agent should be rational and be at least able to recognise statistically optimal hole cards which are worth investing in. However, chance alone does not make our agent a winner. In Poker, a core strategy is the ability to model and subsequently predict how an opponent is behaving. This enhancement allows our agent to gain an advantage over randomness, and rake the opponent's money.
@@ -62,14 +66,21 @@ Our poker agent is also placed under a time constraint for every action, so
 	\item What is the result that you achieved? (i.e. why should the reader believe you?)
 \end{enumerate}
 
+\section{Modelling Game State}
 
-\subsubsection{Special Sections}
+\subsection{Abstracting Card Values}
 
-Any appendices directly follow the text and look like sections, except
-that they are numbered with capital letters instead of arabic
-numerals.
+card isomorphism magic
+monte carlo
+bucketing strategies and how we generated the bucketing
+percentile
 
-\footnote{This is how your footnotes should appear.} Separate them from the text by a short line.
+generate the win rate table by forcing both players to reveal their cards
+OR use a mathematical approach
+
+cfr
+spne of counter-factual regret
+regret = heuristic
 
 \section{Modelling Opponent Behaviour}
 
@@ -112,23 +123,6 @@ However, such a strategy ... makes it predictable??
 What game states can we use to approximate play styles?
 Tightness - Folding Rate
 Aggressiveness - Raising Rate
-
-\section{Modelling Game State}
-
-\subsection{Abstracting Card Values}
-
-card isomorphism magic
-monte carlo
-bucketing strategies and how we generated the bucketing
-percentile
-
-generate the win rate table by forcing both players to reveal their cards
-OR use a mathematical approach
-
-cfr
-spne of counter-factual regret
-regret = heuristic
-
 
 \section{Training}
 
