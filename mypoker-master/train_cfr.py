@@ -106,7 +106,7 @@ def _write_strategy(game_tree, iterations, output_path):
 #     _write_strategy(cfr.game_tree, iterations, output_path)
 
 if __name__ == "__main__":
-    iterations = 10
+    iterations = 50
     output_path = './training_output'
 
     cfr = Cfr()

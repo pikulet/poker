@@ -1,6 +1,7 @@
 import random
-from cfr_methods. hand_evaluation import get_hand_bucket
+from cfr_methods.hand_evaluation import get_hand_bucket
 from pypokerengine.players import BasePokerPlayer
+from pypokerengine.utils.card_utils import gen_cards
 import pprint
 
 class CfrPlayer(BasePokerPlayer):
@@ -54,7 +55,8 @@ class CfrPlayer(BasePokerPlayer):
 
     if len(round_state['community_card']) != self.num_com_cards:
         self.num_com_cards = len(round_state['community_card'])
-        current_hand_bucket = get_hand_bucket(hole_card + round_state['community_card'])
+        com_cards = gen_cards(round_state['community_card'])
+        current_hand_bucket = get_hand_bucket(hole_card + com_cards)
         self.info_set += str(current_hand_bucket)
         self.info_set += ':'
 
@@ -106,7 +108,7 @@ class CfrPlayer(BasePokerPlayer):
     #pp.pprint(valid_actions)
     #print("-------------------------------")
 
-    self._get_info_set(hole_card, round_state)
+    self._get_info_set(gen_cards(hole_card), round_state)
     # if the training output does not include strategy for this information set, just call
     try:
         node_strategy = self.strategy[self.info_set]
