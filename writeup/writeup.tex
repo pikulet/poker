@@ -56,15 +56,11 @@ Our poker agent is also placed under a time constraint for every action, so
 
 \begin{enumerate}
 	\item Functionality, the agent should be rational and be at least able to recognise statistically optimal hole cards which are worth investing in. However, chance alone does not make our agent a winner. In Poker, a core strategy is the ability to model and subsequently predict how an opponent is behaving. This enhancement allows our agent to gain an advantage over randomness, and rake the opponent's money.
+	
 	\item
 	\item Why did you choose this implementation (i.e. why should the reader be interested?)
 	\item What is the result that you achieved? (i.e. why should the reader believe you?)
 \end{enumerate}
-
-\subsection{Word Processing Software}
-
-some text
-
 
 
 \subsubsection{Special Sections}
@@ -73,11 +69,71 @@ Any appendices directly follow the text and look like sections, except
 that they are numbered with capital letters instead of arabic
 numerals.
 
-\subsection{Citations}
-
 \footnote{This is how your footnotes should appear.} Separate them from the text by a short line.
 
+\section{Modelling Opponent Behaviour}
+
+The current research on poker strategies suggests that there is no 1-king in poker tournaments. No one strategy is able to exploit all other strategies in the strategy space. The strategy graph can be described as being non-transistive, where $s_1$ dominating $s_2$ and $s_2$ dominating $s_3$ could still suggest that $s_3$ dominates $s_1$.
+
+In that case then, an optimal agent would have to adapt to the opponent play style and find an element in the set of strategies that would dominate the opponent strategy.  There are two tasks here then, firstly to abstract the strategy states for the agent, and then to approximate the opponent's strategy state based on the observed play.
+
+\subsection{Characterising Play Styles}
+A simple way to characterise player strategies is to consider betting behaviour when the player has bad hands and good hands. 
+
+When a player receives a bad hand, they could continue playing or choose to fold. This behaviour can be defined on a tightness-looseness scale. A tight player only plays a small percentage of their hands, and folds otherwise. On the other hand, a loose player would choose to take risks and make bets based on the potential of the hand. Loose play is called bluffing, deceives the opponent into over-estimating the agent's hand strength. The opponents may fold as a result of this observation.
+
+When a player receives a good hand, they could call/ check (keep the pot size stable) or raise their bets. This behaviour can be defined on a passiveness-aggressiveness scale. A passive player keeps their bets low and stable. On the other hand, an aggressive player will actively make raises to increase the game stakes. Passive play is another form of deceit, which leads opponents to under-estimate the hand strength, thereby continuing to place bets and raise the pot amount.
+
+An opponent's strategy at one point in time can then be represented as a 2-tuple of (tightness, aggressiveness). Note that this tuple merely represents an instantaneous strategy, and the opponent could change strategies over time because
+
+1. The opponent adapts their play to our agent's play style
+2. The opponent employs a team-based strategy where a coach sends out different players to the table depending on the play style our agent uses.
+
+\subsubsection{Approximating Towards Opponent Strategy}
+
+Given an opponent strategy, we hypothesise that approximating our strategy to be similar to the opponent would minimise our losses. We consider extreme cases to illustrate this point. 
+
+First, consider an opponent that is very tight in play, always folding until they receive a good hand. Suppose on the other hand, that we adopt a loose play and choose to make bets even when our hands are not as ideal. (expound on this)
+
+Alternatively, consider an opponent that is very aggressive in play, always raising when they receive a good hand. Suppose on the other hand that we adopt a passive play and choose to call or check even when our hands are very strong. (expound on this)
+
+\subsubsection{Randomising Strategy}
+
+The exploitability of opponent behaviour should be symmetric, so our agent has to acknowledge the opponent can similar extract patterns from our play style. It would then be beneficial to either mask our play style or change our play style during the game.
+
+Our agent model generates a 3-tuple for the probability of playing each action (fold, call, raise). For example, one of the tuples generated could be (0.2, 0.3, 0.5). We note here that the probability of raising is the most significant, so we can deduce that our player hand is strong.
+
+Some researchers employ purification techniques to overcome abstraction coarseness. These poker agents prefer the higher-probability actions and ignore actions that are unlikely to be played. In particular, Ganzfried and Sandholm found full purification to be the most effective. The full purification technique let the agent play the most-probable action with probability 1.
+
+However, such a strategy ... makes it predictable??
+
+\subsection{Predicting Play Styles}
+
+What game states can we use to approximate play styles?
+Tightness - Folding Rate
+Aggressiveness - Raising Rate
+
+\section{Modelling Game State}
+
+\subsection{Abstracting Card Values}
+
+card isomorphism magic
+monte carlo
+bucketing strategies and how we generated the bucketing
+percentile
+
+generate the win rate table by forcing both players to reveal their cards
+OR use a mathematical approach
+
+cfr
+spne of counter-factual regret
+regret = heuristic
+
+
 \section{Training}
+
+dqn
+
 
 \section*{Acknowledgments}
 
