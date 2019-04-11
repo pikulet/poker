@@ -76,7 +76,7 @@ different types of cards and combinations that could occur. A good
 abstraction allows for less calculation by our agent, which is 
 important for the agent to play within the time controls.
 
-Upon recognising good and bad hands, our agent has to be able to 
+Upon recognising strong and weak hands, our agent has to be able to 
 make the right decision (whether to fold, call or bet). In order to 
 give our agent the ability to make such decisions without being 
 predictable, we programmed our agent with Counterfactual Regret 
@@ -95,16 +95,17 @@ from our opponent's money.
 \end{enumerate}
 
 \section{Modelling Game State}
+Poker has a plethora of game states an agent can tap on, such as the hand strength, pot size, money left to name a few. Given the complexity of poker then, it would be infeasible to use all the game states in training our agent.
 
-\subsection{Abstracting Card Values}
+\subsection{Hand Strength}
+The primary heuristic in a rational poker agent would be the hand strength, because that is how poker's end state is eventually evaluated. The player with the higher hand strength clears the pot. There is extensive research on evaluators hand strength, such as CactusKev, TwoPlusTwo and 7-card.
 
-In order to reduce the number of types of cards that our agent can 
-receive, we made use of card isomorphism. Card isomorphism relies 
-on the fact that the type of suit a card has has no inherent value 
-and can be abstracted out. For example, A$\clubsuit$ A$\clubsuit$ 
-has the same winning chance as A$\spadesuit$ A$\spadesuit$. Thus, by 
-treating these cards as the same kind of hands, the agent can act 
-similarly for both hands.
+These evaluators aim to classify cards into groups of similar play styles, which are called buckets. Since hand strengths (HS) change across streets as community cards are revealed, the classification key is typically a function of the current hand strength, and the potential hand strength.
+
+$f(n) = HS_{curr}(n) + sigma(P(HS_{new}(n)) * HS_{new}(n))$
+
+\subsubsection{Abstracting Card Values}
+To effective evaluate hand strengths, it is imperative to simplify the hands using abstraction techniques like card isomorphism. Card isomorphism relies on the fact that the type of suit a card has has no inherent value and can be abstracted out. For example, A$\clubsuit$ A$\clubsuit$ has the same winning chance as A$\spadesuit$ A$\spadesuit$. Thus, by treating these cards as the same kind of hands, the agent can act similarly for both hands.
 
 Another way we implemented abstraction was through the use of card 
 bucketing. By grouping hands with similar hand strength, like 
@@ -121,7 +122,7 @@ strategies for different types of hands and keeping the game state
 small enough for our agent to process. Percentile bucketing was 
 used for easy classification, where the bottom bucket corresponds 
 to the bottom 1/5 of hands according to hand strength. In order to 
-provide a good estimation of hand strength, we used the winrate of 
+provide a viable estimation of hand strength, we used the winrate of 
 each hand. Each bucket is thus identified by a minimum and maximum 
 winrate.
 
@@ -138,24 +139,20 @@ can probably put a table here
 generate the win rate table by forcing both players to reveal their cards
 OR use a mathematical approach
 
-cfr
-spne of counter-factual regret
-regret = heuristic
-
 \section{Modelling Opponent Behaviour}
 
 The current research on poker strategies suggests that there is no 1-king in poker tournaments. No one strategy is able to exploit all other strategies in the strategy space. The strategy graph can be described as being non-transistive, where $s_1$ dominating $s_2$ and $s_2$ dominating $s_3$ could still suggest that $s_3$ dominates $s_1$.
 
-In that case then, an optimal agent would have to adapt to the opponent play style and find an element in the set of strategies that would dominate the opponent strategy.  There are two tasks here then, firstly to abstract the strategy states for the agent, and then to approximate the opponent's strategy state based on the observed play.
+In that case then, an optimal agent would have to adapt to the opponent play style and find an element in the set of strategies that would dominate the opponent strategy.  There are three tasks here then, firstly to abstract the strategy states for the agent, secondly to approximate the opponent's strategy state based on the observed play and lastly to apply a dominating strategy over the opponent's play.
 
 \subsection{Characterising Play Styles}
-A simple way to characterise player strategies is to consider betting behaviour when the player has bad hands and good hands. 
+A simple way to characterise player strategies is to consider betting behaviour when the player has weak hands and strong hands. 
 
-When a player receives a bad hand, they could continue playing or choose to fold. This behaviour can be defined on a tightness-looseness scale. A tight player only plays a small percentage of their hands, and folds otherwise. On the other hand, a loose player would choose to take risks and make bets based on the potential of the hand. Loose play is called bluffing, deceives the opponent into over-estimating the agent's hand strength. The opponents may fold as a result of this observation.
+When a player receives a weak hand, they could continue playing or choose to fold. This behaviour can be defined on a tightness-looseness scale. A tight player only plays a small percentage of their hands, and folds otherwise. On the other hand, a loose player would choose to take risks and make bets based on the potential of the hand. Loose play is called bluffing, deceives the opponent into over-estimating the agent's hand strength. The opponents may fold as a result of this observation.
 
-Theoretically, a tight play aims to reduce losses in the case of bad hands. However, a very tight play would also mean that the chances to observe the opponent's behaviour is diminished.
+Theoretically, a tight play aims to reduce losses in the case of weak hands. However, a very tight play would also mean that the chances to observe the opponent's behaviour is diminished.
 
-When a player receives a good hand, they could call/ check (keep the pot size stable) or raise their bets. This behaviour can be defined on a passiveness-aggressiveness scale. A passive player keeps their bets low and stable. On the other hand, an aggressive player will actively make raises to increase the game stakes. Passive play is another form of deceit, which leads opponents to under-estimate the hand strength, thereby continuing to place bets and raise the pot amount.
+When a player receives a strong hand, they could call/ check (keep the pot size stable) or raise their bets. This behaviour can be defined on a passiveness-aggressiveness scale. A passive player keeps their bets low and stable. On the other hand, an aggressive player will actively make raises to increase the game stakes. Passive play is another form of deceit, which leads opponents to under-estimate the hand strength, thereby continuing to place bets and raise the pot amount.
 
 An aggressive play style hopes to maximise the winnings when the hands are strong. However, an over-aggressive play will also encourage opponents to fold, which again discards opportunities to observe opponent behaviour.
 
@@ -166,41 +163,45 @@ An opponent's strategy at one point in time can then be represented as a 2-tuple
 	\item The opponent employs a team-based strategy where a coach sends out different players to the table depending on the play style our agent uses.
 \end{enumerate}
 
-\subsubsection{Heuristic for Tightness and Aggressiveness}
+\subsection{Predicting Play Styles}
+Given that we decide to model player behaviour using aggressiveness and looseness, we need to extract specify features of the game state to feed into our neural network. In the given engine, the interaction with the opponent comes from the betting actions and the showdown. However, not every game ends in a showdown so using card information from the showdown may not be as effective. Hence, our heuristics for player tightness and aggressiveness is derived from the betting actions of folding and raising.
 
-The opponent tightness can be approximated using the folding rate over multiple games. 
-
-The drawback to using the folding-rate heuristic is that a large number of games is needed to make a prediction. By the time these observations are made, the opponent may have already adopted a different play style.
+The opponent tightness can be approximated using the folding rate over multiple games. The drawback to using the folding-rate heuristic is that a large number of games is needed to make a prediction. By the time these observations are made, the opponent may have already adopted a different play style.
 
 The opponent aggressiveness can be approximated using the raising rate. We make the assumption that when the opponent has a weak hand, they will only call or fold, and raising is only the result of relatively strong hands.
 
 Our agent incorporates these heuristics into its modelling of the opponent by saving the opponent's action history each round.
 
-\subsubsection{Approximating Towards Opponent Strategy}
+\subsection{Deriving a Dominating Strategy}
 
-Given an opponent strategy, we hypothesise that approximating our strategy to be similar to the opponent would minimise our losses. We consider extreme cases to illustrate this point. 
+\subsubsection{Approximating Strategy}
+Given an opponent strategy, we hypothesise that approximating our strategy to be similar to the opponent would minimise our losses. We consider extreme cases to illustrate this point. Let $h_1$ denote a very strong hand and $h_2$ denote a very weak hand, $h_1$ > $h_2$.
 
-First, consider an opponent that is very tight in play, always folding until they receive a good hand. Suppose on the other hand, that we adopt a loose play and choose to make bets even when our hands are not as ideal. Suppose then, that the opponent obtains a very good hand $h_1$ and we obtain a very bad hand $h_2$. Our looseness will lead us to contribute an amount $x_1$ to the pot before eventually folding or losing during the showdown. By pure chance, there is an equally probability that the two hands are reversed, so the opponents has the very bad hand $h_2$ and we hold on the the very good hand $h_1$. Since the opponent has a tighter play, they would have a lower probability of putting money into the pot, and a higher probability of folding. We let the amount contributed by the opponent to the pot be $x_2$. Clearly, $x_2$, the expected loss by the tight opponent < $x_1$, the expected loss by our loose agent. In the case of tightness, it then makes sense to approximate our tightness to be close to that of the opponent.
+First, consider our loose agent playing against a tight opponent. Let the opponent have $h_1$ and let our player have $h_2$. Our looseness means we will contribute an expected amount $x_1$ to the pot before folding or losing during the showdown. By pure chance, there is an equal probability that the two hands are reversed, the opponents has $h_2$ and we hold on to $h_1$. Since the opponent has a tighter play, they would have a lower probability of contributing money into the pot, and a higher probability of folding. Let $x_2$ be the opponent's expected loss. Clearly, $x_2$ < $x_1$. In the case of tightness, approximating our tightness to be close to that of the opponent will reduce our losses on weak hands.
 
-Alternatively, consider an opponent that is very aggressive in play, always raising when they receive a good hand. Suppose on the other hand that we adopt a passive play and choose to call or check even when our hands are very strong. (expound on this)
+Alternatively, consider our passive agent against an aggressive opponent.  Let the opponent have $h_1$ and let our player have $h_2$. The aggressive opponent will raise the pot amount, and eventually wins an amount $y_1$ during the showdown or when we have folded. Similarly, we have an equal chance to have $h_1$ while our opponent has $h_2$. However, our more passive play will instead opt to keep the pot size stable by calling or checking. In the end, we will win a pot amount $y_2$. Since there was less money put into the pot, then $y_2$ < $y_1$. Matching the opponent's aggressiveness, then, allows us to maximise our agent winnings.
+
+The above analysis disregards the effects of bluffing and trapping, and the risk-taking behaviours which usually manifest with moderate-strength hands.
 
 \subsubsection{Randomising Strategy}
 
-The exploitability of opponent behaviour should be symmetric, so our agent has to acknowledge the opponent can similar extract patterns from our play style. It would then be beneficial to either mask our play style or change our play style during the game.
+The exploitability of opponent behaviour is symmetric, so our agent has to acknowledge that the opponent can similarly extract patterns from our play style. It would then be beneficial to either mask our play style or change our play style during the game.
 
-Our agent model generates a 3-tuple for the probability of playing each action (fold, call, raise). For example, one of the tuples generated could be (0.2, 0.3, 0.5). We note here that the probability of raising is the most significant, so we can deduce that our player hand is strong.
+Our agent model generates a 3-tuple for the probability of playing each action (fold, call, raise). For example, one of the tuples generated could be (0.2, 0.3, 0.5). We note here that the probability of raising is the most significant, so we can deduce that our player hand is strong. The actual magnitude of the probabilities is determined by our player aggressiveness and tightness, and the evaluated hand strength.
 
 Some researchers employ purification techniques to overcome abstraction coarseness. These poker agents prefer the higher-probability actions and ignore actions that are unlikely to be played. In particular, Ganzfried and Sandholm found full purification to be the most effective. The full purification technique let the agent play the most-probable action with probability 1.
 
-However, such a strategy ... makes it predictable?? In particular, the deceit techniques of bluffing and trapping would be less effective. 
+However, we argue against purification because noise in our player behaviour can disrupt the opponent's attempt in identifying patterns in our play style. Yakovenko et al's poker agent player against human players using a fixed play style, and after 100/ 500 hands, the human player was able to recognise mistakes made by the agent and boost their win rate. In particular, the noise supports our deceit techniques of bluffing and trapping.
 
-\subsection{Predicting Play Styles}
+Besides using noise to generate randomness, we can also change our play style to obfuscate our opponents. Given the same hand as above, our agent may instead generate a 3-tuple like (0, 0.3, 0.7), displaying a significantly higher aggressiveness. We can draw an analogy to local-hill search, where continually exploiting the same strategy may just be leading us to local maxima. The sudden exploration could be less optimal, but may also lead us to an improved local maxima. In coach-based agents, this exploration is analogous to fielding a player the opponent has not met before.
 
-What game states can we use to approximate play styles?
-Tightness - Folding Rate
-Aggressiveness - Raising Rate
+\section{Counter-factual Regret (CFR) Minimisation}
 
-\section{Training}
+cfr
+spne of counter-factual regret
+regret = heuristic
+shown to approximate equilibrium
+\section{Training with a Deep-Q Network}
 
 dqn
 
