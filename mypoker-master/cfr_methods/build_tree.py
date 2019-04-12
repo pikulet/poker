@@ -100,9 +100,10 @@ class GameTreeBuilder:
         round_index = const.TOTAL_ROUNDS - rounds_left # this is actually the street index
         next_player = (current_player + 1) % const.NUM_PLAYERS
         max_pot_commitment = max(pot_commitment)
-        valid_actions = [1]
-        if not bets_settled:
-            valid_actions.append(0)
+        # valid_actions = [1]
+        # if not bets_settled:
+        #     valid_actions.append(0)
+        valid_actions = [0, 1]
         if game_state.round_raise_count[current_player] < const.MAX_RAISES[current_player]\
                 and game_state.street_raise_count < const.get_max_street_raises(round_index):
             valid_actions.append(2)
@@ -116,7 +117,7 @@ class GameTreeBuilder:
                 next_game_state.pot_commitment[current_player] = max_pot_commitment
             elif a == 2:
                 next_game_state.round_raise_count[current_player] += 1
-                next_game_state.steet_raise_count += 1
+                next_game_state.street_raise_count += 1
                 next_game_state.pot_commitment[current_player] = \
                     max_pot_commitment + const.get_street_raise_size(round_index)
 

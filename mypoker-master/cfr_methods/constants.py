@@ -7,7 +7,7 @@ FIRST_PLAYER = 0
 NUM_HOLECARDS = 2
 NUM_BUCKETS = 5
 RAISE_SIZE = 10
-MAX_RAISES = [2, 1]
+MAX_RAISES = [2, 2]
 
 
 def get_num_board_cards(round_num):
