@@ -64,6 +64,8 @@ class GameTreeBuilder:
 
             next_game_state = copy.deepcopy(game_state)
             for i in range(const.NUM_BUCKETS):
+                if parent is None:
+                    print('building branch ' + str(i) + ' of from the game tree root')
                 self._generate_action_node(new_node, i + 1, next_game_state)
 
     @staticmethod
