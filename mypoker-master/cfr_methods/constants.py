@@ -20,5 +20,20 @@ def get_num_board_cards(round_num):
     }
     return switcher.get(round_num, -1)
 
+def get_max_street_raises(street_num):
+    if street_num == 0:
+        return 3
+    else:
+        return 4
+
+def get_street_raise_size(round_index):
+    switcher = {
+        0: BIG_BLIND_AMOUNT,
+        1: BIG_BLIND_AMOUNT,
+        2: 2 * BIG_BLIND_AMOUNT,
+        3: 2 * BIG_BLIND_AMOUNT
+    }
+    return switcher.get(round_index, -1)
+
 # TODO: check that small blind speaks first at the begining of each street cfr.112
 # TODO: check that the get_num_board_cards switch numbers are set correctly

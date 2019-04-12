@@ -23,12 +23,14 @@ class GameTreeBuilder:
             # Round properties
             self.rounds_left = const.TOTAL_ROUNDS
             self.round_raise_count = [0, 0]
+            self.street_raise_count = 0
             self.players_acted = 0
             self.current_player = const.FIRST_PLAYER
 
         def next_round_state(self):
             """Get copy of this state for new game round."""
             res = copy.deepcopy(self)
+            res.street_raise_count = 0
             res.rounds_left -= 1
             res.players_acted = 0
             return res
@@ -95,13 +97,14 @@ class GameTreeBuilder:
         new_node = ActionNode(parent, current_player)
         parent.children[child_key] = new_node
 
-        round_index = const.TOTAL_ROUNDS - rounds_left
+        round_index = const.TOTAL_ROUNDS - rounds_left # this is actually the street index
         next_player = (current_player + 1) % const.NUM_PLAYERS
         max_pot_commitment = max(pot_commitment)
         valid_actions = [1]
         if not bets_settled:
             valid_actions.append(0)
-        if game_state.round_raise_count[current_player] < const.MAX_RAISES[current_player]:
+        if game_state.round_raise_count[current_player] < const.MAX_RAISES[current_player]\
+                and game_state.street_raise_count < const.get_max_street_raises(round_index):
             valid_actions.append(2)
         for a in valid_actions:
             next_game_state = game_state.next_move_state()
@@ -113,7 +116,8 @@ class GameTreeBuilder:
                 next_game_state.pot_commitment[current_player] = max_pot_commitment
             elif a == 2:
                 next_game_state.round_raise_count[current_player] += 1
+                next_game_state.steet_raise_count += 1
                 next_game_state.pot_commitment[current_player] = \
-                    max_pot_commitment + const.RAISE_SIZE
+                    max_pot_commitment + const.get_street_raise_size(round_index)
 
             self._generate_action_node(new_node, a, next_game_state)
