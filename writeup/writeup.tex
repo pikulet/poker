@@ -132,9 +132,7 @@ The agent plays the actions with a normalised probability proportional to their 
 
 In the Regret Matching equation, it was not specified how the expected value of winning was calculated. Poker has a large game tree and chance nodes which generate the community cards, making it problematic to accurately define the utility at each terminal node. CFR then extends Regret Matching in sequential games with chance nodes.
 
-
-
-Game state and action sequences.
+importance of bucketing in this part.
 
 \subsection{Nash Equlibrium}
 
@@ -160,6 +158,8 @@ However, we argue against purification because noise in our player behaviour can
 
 Besides using noise to generate randomness, we can also change our play style to obfuscate our opponents. Given the same hand as above, our agent may instead generate a 3-tuple like (0, 0.3, 0.7), displaying a significantly higher aggressiveness. We can draw an analogy to local-hill search, where continually exploiting the same strategy may just be leading us to local maxima. The sudden exploration could be less optimal, but may also lead us to an improved local maxima. Some researchers use coach-based agents, and this exploration is analogous to fielding a player the opponent has not met before.
 
+** DOES CFR CONVERGE TO A PARTICULAR AGGRESSIVENESS AND TIGHTNESS VALUE? LITERATURE SUGGESTS SO.
+
 \section{Training with a Deep-Q Network}
 
 While we modelled our agent using knowledge-based approaches, we also recognise the importance of using a data-based approach to train our agent. Yakovenko et al posited that a trained model is always more competitive than the model generating the data, since the model was trained to optimise relative to the data. 
@@ -184,7 +184,11 @@ Training against RandomPlayer teaches our agent to play rational, statistically-
 -- explain why we train with CFR agent
 
 \section{Discussion}
+Our poker project takes poker research in two novel directions.
 
+Firstly, we double-trained our CFR agent using Deep-Q Learning.
+
+Secondly, we consider how a Nash Equilibrium in a poker game would manifest in the results. Is the agent always winning?? Is the agent strategy static?? What does being unexploitable mean?
 
 \section{Conclusion}
 
