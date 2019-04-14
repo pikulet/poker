@@ -55,9 +55,9 @@ The primary heuristic in a rational poker agent would be the hand strength, beca
 These evaluators aim to classify cards into groups of similar play styles, which are called buckets. Since hand strengths (HS) change across streets as community cards are revealed, the classification key is typically a function of the current hand strength, and the potential hand strength.
 
 \subsubsection{Card Isomorphism}
-To effective evaluate hand strengths, it is imperative to simplify the hands using abstraction techniques like card isomorphism. Card isomorphism exploits the fact that a card's suit has no inherent value. It is only useful to know whether the two hole cards have the same suit. For example, A$\clubsuit$ A$\clubsuit$ has the same winning chance as A$\spadesuit$ A$\spadesuit$, and these hole cards would be played with similar strategy.
+To effectively evaluate hand strengths, it is imperative to simplify the hands using abstraction techniques like card isomorphism. Card isomorphism exploits the fact that a card's suit has no inherent value. It is only useful to know whether the two hole cards are suited (have the same suit). For example, A$\clubsuit$ A$\clubsuit$ has the same winning chance as A$\spadesuit$ A$\spadesuit$, and these hole cards would be played with similar strategy.
 
-Card isomorphism can reduce the number of game states in the pre-flop stage from ${52 \choose 2} = 1326$ to $13 \times 13 = 169$ states. Each state is identified using the value of the cards, and a boolean indicator if they are the same suit.
+Card isomorphism can reduce the number of game states in the pre-flop stage from ${52 \choose 2} = 1326$ to $13 \times 13 = 169$ states. Each state is identified using the value of the cards, and a boolean indicator if they are the suited.
 
 \subsubsection{Percentile Bucketing}
 However, card isomorphism does not simplify our the game complexity enough. We employ a second layer of abstraction, card bucketing, to group cards of similar strengths together. Two sets of hole cards like K$\heartsuit$ Q$\diamondsuit$ and Q$\diamondsuit$ J$\heartsuit$ can be handled with the same strategy.
@@ -73,6 +73,9 @@ can probably put a table here
 In bucketing, hands can move into different buckets depending on the community cards that have been shown. Johansen suggests using the bucketing sequence in designing the agent, using information on how the hand has moved between buckets in the game. However, we chose to consider each street of the game as being independent and did not incorporate this into our agent.
 
 \section{Modelling Player Behaviour}
+why do we need to model player behaviour if cfr approximates a gto solution in the long term fro all strategies? 
+
+The current research into poker play suggests that every strategy can be exploited? (what about nash equilibrium LOL)
 
 \subsection{Tightness and Aggressiveness}
 A simple way to characterise player strategies is to consider betting behaviour when the player has weak hands and strong hands. 
@@ -96,28 +99,60 @@ The opponent aggressiveness can be approximated using the raising rate. We make 
 
 Our agent incorporates these heuristics into its modelling of the opponent by saving the opponent's action history each round. We extract these features and feed them into our CFR agent.
 
-\section{Counter-factual Regret (CFR) Minimisation}
+\section{Counterfactual Regret Minimisation (CFR) Agent}
 
-Our agent is primarily trained using the CFR mechanism, which is an extended version of Regret Matching. As a reinforcement learning algorithm, the agent engages in iterative self-play.
+Our agent is primarily trained using the Counterfactual Regret Minimisation (CFR) Algorithm, which is an extended version of Regret Matching.
 
-\subsection{Regret}
+\subsection{Regret Matching}
 
-Regret is a concept of reward relative to an action, and can be positive and negative. Through training, the CFR agent cumulatively collects data on actions which have led to positive and negative outcomes. Using the trained data, the CFR agent then picks the actions with the least regret. 
+Regret is a concept of reward relative to an action, and can be positive or negative. It measures how much the agent retrospectively wants to take the action, given the past observations. Regret is then proportional to the loss observed, when the agent did not play the action. Effectively, the agent favours actions that score the highest in the regret heuristic. 
 
-regret = heuristic
+Given the current agent strategy $s$ and the current opponent strategy $s'$, every action $x$ has a regret value that can be formalised:
 
-\subsection{Nash Equilibrium}
-Since CFR is a probabilistic strategy, researchers conclude that CFR approximates to a Nash 
+\begin{center}
+$ActionUtility(x) = E(\{x\}, s')$
 
-spne of counter-factual regret
-shown to approximate equilibrium
+$CurrentUtility() = E(s, s')$
 
+$Regret(x) = ActionUtility(x) - CurrentUtility()$
+\end{center}
+
+The regret of an action is how much more the agent expects to win by always playing the action (ActionUtility) vis-a-vis the amount the agent expects to win with its current strategy (CurrentUtility). The expected value of both winnings are calculated relative to the opponent's current strategy.
+
+The equation gives us two important insights into Regret Matching.
+
+\begin{enumerate}
+	\item $s$ changes based on the updated regrets of the actions. The regret-based agent is engages in reinforcement learning to update its beliefs about each action's regret. Later on, we discuss the convergence of this iterative self-play.
+	\item The regret values of the actions are always relative to a certain opponent strategy. Regret Matching does not consider the case where the opponent changes their strategies over time.
+\end{enumerate}
+
+The agent plays the actions with a normalised probability proportional to their positive regret. We work with a discrete probability distribution that can be represented as a 3-tuple for the probability of playing each action (fold, call, raise). For example, one of the tuples generated could be (0.2, 0.3, 0.5).
+
+\subsection{CFR - Extending Regret Matching}
+
+In the Regret Matching equation, it was not specified how the expected value of winning was calculated. Poker has a large game tree and chance nodes which generate the community cards, making it problematic to accurately define the utility at each terminal node. CFR then extends Regret Matching in sequential games with chance nodes.
+
+
+
+Game state and action sequences.
+
+\subsection{Nash Equlibrium}
+
+In \textit{The Mathematics of Poker}, Chen and Ankenman discuss "game-theory optimal" (GTO) solutions in two and three-player variants. They assert that in poker tournaments with more than three players, there could be implicit collusion between players and hence there is no unexploitable strategy. However, when considering two-player games, then a Nash Equilibrium does exist. 
+
+Over time, we expect the absolute regret for each action to be minimised. Suppose for a contradiction that this is not the case, then there exist an action $x'$ such that $Regret(x')$ is not the minimum. Then, there exists a non-zero probability of playing $x'$. In that case, playing the current strategy with action $x'$ results in a higher expected gain. As $CurrentUtility()$ decreases, $Regret(x')$ decreases.
+
+For all actions $x$, $Regret(x)$ continually decreases. However, we have yet to prove the converge of $Regret(x)$ to a minimum value.
+
+spne shown to approximate equilibrium
+
+While an agent following an optimal strategy may not win the most amount of money from their opponents, they cannot be exploited in the long run. Nevertheless, GTO agents are vulnerable to agents which often change their strategy mid-game.
 
 \subsection{Randomising Strategy}
 
 The exploitability of opponent behaviour is symmetric, so our agent has to acknowledge that the opponent can similarly extract patterns from our play style. It would then be beneficial to either mask our agent bias or change our play style during the game.
 
-Our agent model generates a 3-tuple for the probability of playing each action (fold, call, raise). For example, one of the tuples generated could be (0.2, 0.3, 0.5). We note here that the probability of raising is the most significant, so we can deduce that our player hand is strong. The actual magnitude of the probabilities is determined by our player aggressiveness and tightness, and the evaluated hand strength.
+Consider the tuple (0.2, 0.3, 0.5). We note here that the probability of raising is the most significant, so we can deduce that our player hand is strong. The actual magnitude of the probabilities is determined by our player aggressiveness and tightness, and the evaluated hand strength.
 
 Some researchers employ purification techniques to overcome abstraction coarseness. These poker agents prefer the higher-probability actions and ignore actions that are unlikely to be played. In particular, Ganzfried and Sandholm found full purification to be the most effective. The full purification technique let the agent play the most-probable action with probability 1.
 
