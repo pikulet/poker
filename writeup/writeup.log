@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6930 64-bit) (preloaded format=pdflatex 2019.3.21)  13 APR 2019 08:52
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6930 64-bit) (preloaded format=pdflatex 2019.3.21)  14 APR 2019 13:14
 entering extended mode
 **./writeup.tex
 (writeup.tex
@@ -154,33 +154,33 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 ]
 [2]
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <8> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 176.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 162.
  (writeup.bbl
 
 LaTeX Warning: Empty `thebibliography' environment on input line 3.
 
-) [3] (writeup.aux) ) 
+) [3
+
+] (writeup.aux) ) 
 Here is how much of TeX's memory you used:
  2572 strings out of 492946
  38858 string characters out of 3126266
- 118418 words of memory out of 3000000
+ 117418 words of memory out of 3000000
  6490 multiletter control sequences out of 15000+200000
  19003 words of font info for 40 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 36i,11n,38p,701b,252s stack positions out of 5000i,500n,10000p,200000b,50000s
-{C:/Users/Joyce/AppData/Local/Programs/MiKTeX 2.9/fonts/en
-c/dvips/base/8r.enc}<C:/Users/Joyce/AppData/Local/Programs/MiKTeX 2.9/fonts/typ
-e1/public/amsfonts/cm/cmex10.pfb><C:/Users/Joyce/AppData/Local/Programs/MiKTeX 
-2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/Joyce/AppData/Local/Pro
-grams/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/Joyce/AppDa
-ta/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/
-Joyce/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.p
-fb><C:/Users/Joyce/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/urw/times/utmb
-8a.pfb><C:/Users/Joyce/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/urw/times/
-utmr8a.pfb>
-Output written on writeup.pdf (3 pages, 95019 bytes).
+ 36i,11n,38p,634b,252s stack positions out of 5000i,500n,10000p,200000b,50000s
+{C:/Users/Joyce/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dv
+ips/base/8r.enc}<C:/Users/Joyce/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/p
+ublic/amsfonts/cm/cmex10.pfb><C:/Users/Joyce/AppData/Local/Programs/MiKTeX 2.9/
+fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/Joyce/AppData/Local/Programs
+/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/Joyce/AppData/Loc
+al/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/Joyc
+e/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/urw/times/utmb8a.pfb><C:/Users/
+Joyce/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/urw/times/utmr8a.pfb>
+Output written on writeup.pdf (3 pages, 83612 bytes).
 PDF statistics:
- 41 PDF objects out of 1000 (max. 8388607)
+ 37 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

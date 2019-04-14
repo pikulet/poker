@@ -72,13 +72,9 @@ can probably put a table here
 
 In bucketing, hands can move into different buckets depending on the community cards that have been shown. Johansen suggests using the bucketing sequence in designing the agent, using information on how the hand has moved between buckets in the game. However, we chose to consider each street of the game as being independent and did not incorporate this into our agent.
 
-\section{Modelling Opponent Behaviour}
+\section{Modelling Player Behaviour}
 
-The current research on poker strategies suggests that there is no 1-king in poker tournaments, and no one strategy is able to exploit all other strategies in the strategy space. The strategy graph can be described as being non-transistive, where $s_1$ dominating $s_2$ and $s_2$ dominating $s_3$ could still suggest that $s_3$ dominates $s_1$.
-
-In that case then, an optimal agent would have to adapt to the opponent play style and find an element in the set of strategies that would dominate the opponent strategy.  There are three tasks here , firstly to abstract the strategy states for the agent, secondly to approximate the opponent's strategy based on the observed play and lastly to apply a dominating strategy over the opponent's play.
-
-\subsection{Characterising Play Styles}
+\subsection{Tightness and Aggressiveness}
 A simple way to characterise player strategies is to consider betting behaviour when the player has weak hands and strong hands. 
 
 When a player receives a weak hand, they could continue playing or choose to fold. This behaviour can be defined on a tightness-looseness scale. A tight player only plays a small percentage of their hands, while a loose player would choose to take risks and make bets based on the potential of the hand. Loose play is called bluffing, and deceives the opponent into over-estimating the agent's hand strength and folding.
@@ -91,37 +87,14 @@ An aggressive play style hopes to maximise the winnings when the hands are stron
 
 An opponent's strategy at one point in time can be represented as a 2-tuple of (tightness, aggressiveness). The tuple represents an instantaneous strategy as the opponent could change over time to adapt their play to our agent.
 
-\subsection{Predicting Play Styles}
-Given that we decide to model player behaviour using aggressiveness and tightness, we then extract features of the game state to feed into our neural network. The interaction with the opponent comes from the betting actions and the showdown. However, not every game ends in a showdown so using card information from the showdown may not be as effective. Hence, our heuristics for player tightness and aggressiveness is derived from the betting actions of folding and raising.
+\subsection{Heuristics for Tightness and Aggressiveness}
+The interaction with the opponent comes from the betting actions and the showdown. However, not every game ends in a showdown so using card information from the showdown may not be as effective. Hence, our heuristics for player tightness and aggressiveness is derived from the betting actions of folding and raising.
 
 The opponent tightness can be approximated using the folding rate over multiple games. The drawback to using the folding-rate heuristic is that a large number of games is needed to make a prediction. By the time these observations are made, the opponent may have already adopted a different play style.
 
 The opponent aggressiveness can be approximated using the raising rate. We make the assumption that when the opponent has a weak hand, they will only call or fold, and raising is only the result of relatively strong hands.
 
-Our agent incorporates these heuristics into its modelling of the opponent by saving the opponent's action history each round.
-
-\subsection{Deriving a Dominating Strategy}
-
-\subsubsection{Approximating Strategy}
-Given an opponent strategy, we hypothesise that approximating our strategy to be similar to the opponent would minimise our losses. We consider extreme cases to illustrate this point. Let $h_1$ denote a very strong hand and $h_2$ denote a very weak hand, $h_1 > h_2$.
-
-First, consider our loose agent playing against a tight opponent. Let the opponent have $h_1$ and while our player has $h_2$. Our looseness means we will contribute an expected amount $x_1$ to the pot before folding or losing during the showdown. By pure chance, there is an equal probability that the hands are reversed, and the opponent has $h_2$ while we hold $h_1$. Since the opponent has a tighter play, they would have a lower probability of contributing money into the pot, and a higher probability of folding. Let $x_2$ be the opponent's expected loss. Clearly, $x_2 < x_1$. Approximating our tightness to be close to that of the opponent will reduce our losses on weak hands.
-
-Alternatively, consider our passive agent against an aggressive opponent.  Let the opponent have $h_1$ and our player have $h_2$. The aggressive opponent will raise the pot amount, and eventually wins an amount $y_1$ during the showdown or when we have folded. Similarly, we have an equal chance to have $h_1$ while our opponent has $h_2$. However, our more passive play will instead opt to keep the pot size stable by calling. In the end, we will win a pot amount $y_2$. Since there was less money put into the pot, then $y_2 < y_1$. Matching the opponent's aggressiveness allows us to maximise our agent winnings.
-
-The above analysis disregards the effects of bluffing and trapping, and the risk-taking behaviours which usually manifest with moderate-strength hands.
-
-\subsubsection{Randomising Strategy}
-
-The exploitability of opponent behaviour is symmetric, so our agent has to acknowledge that the opponent can similarly extract patterns from our play style. It would then be beneficial to either mask our agent bias or change our play style during the game.
-
-Our agent model generates a 3-tuple for the probability of playing each action (fold, call, raise). For example, one of the tuples generated could be (0.2, 0.3, 0.5). We note here that the probability of raising is the most significant, so we can deduce that our player hand is strong. The actual magnitude of the probabilities is determined by our player aggressiveness and tightness, and the evaluated hand strength.
-
-Some researchers employ purification techniques to overcome abstraction coarseness. These poker agents prefer the higher-probability actions and ignore actions that are unlikely to be played. In particular, Ganzfried and Sandholm found full purification to be the most effective. The full purification technique let the agent play the most-probable action with probability 1.
-
-However, we argue against purification because noise in our player behaviour can disrupt the opponent's attempt in identifying patterns in our play style. Yakovenko et al's poker agent player against human players using a fixed play style, and after 100/ 500 hands, the human player was able to recognise mistakes made by the agent and boost their win rate. In particular, the noise supports our deceit techniques of bluffing and trapping.
-
-Besides using noise to generate randomness, we can also change our play style to obfuscate our opponents. Given the same hand as above, our agent may instead generate a 3-tuple like (0, 0.3, 0.7), displaying a significantly higher aggressiveness. We can draw an analogy to local-hill search, where continually exploiting the same strategy may just be leading us to local maxima. The sudden exploration could be less optimal, but may also lead us to an improved local maxima. Some researchers use coach-based agents, and this exploration is analogous to fielding a player the opponent has not met before.
+Our agent incorporates these heuristics into its modelling of the opponent by saving the opponent's action history each round. We extract these features and feed them into our CFR agent.
 
 \section{Counter-factual Regret (CFR) Minimisation}
 
@@ -138,6 +111,19 @@ Since CFR is a probabilistic strategy, researchers conclude that CFR approximate
 
 spne of counter-factual regret
 shown to approximate equilibrium
+
+
+\subsection{Randomising Strategy}
+
+The exploitability of opponent behaviour is symmetric, so our agent has to acknowledge that the opponent can similarly extract patterns from our play style. It would then be beneficial to either mask our agent bias or change our play style during the game.
+
+Our agent model generates a 3-tuple for the probability of playing each action (fold, call, raise). For example, one of the tuples generated could be (0.2, 0.3, 0.5). We note here that the probability of raising is the most significant, so we can deduce that our player hand is strong. The actual magnitude of the probabilities is determined by our player aggressiveness and tightness, and the evaluated hand strength.
+
+Some researchers employ purification techniques to overcome abstraction coarseness. These poker agents prefer the higher-probability actions and ignore actions that are unlikely to be played. In particular, Ganzfried and Sandholm found full purification to be the most effective. The full purification technique let the agent play the most-probable action with probability 1.
+
+However, we argue against purification because noise in our player behaviour can disrupt the opponent's attempt in identifying patterns in our play style. Yakovenko et al's poker agent player against human players using a fixed play style, and after 100/ 500 hands, the human player was able to recognise mistakes made by the agent and boost their win rate. In particular, the noise supports our deceit techniques of bluffing and trapping.
+
+Besides using noise to generate randomness, we can also change our play style to obfuscate our opponents. Given the same hand as above, our agent may instead generate a 3-tuple like (0, 0.3, 0.7), displaying a significantly higher aggressiveness. We can draw an analogy to local-hill search, where continually exploiting the same strategy may just be leading us to local maxima. The sudden exploration could be less optimal, but may also lead us to an improved local maxima. Some researchers use coach-based agents, and this exploration is analogous to fielding a player the opponent has not met before.
 
 \section{Training with a Deep-Q Network}
 
