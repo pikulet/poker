@@ -9,6 +9,7 @@ from argparse import ArgumentParser
 
 """ =========== *Remember to import your agent!!! =========== """
 from randomplayer import RandomPlayer
+from honest_player import HonestPlayer
 from ourplayer import StarPlayer
 from cfr_player import CfrPlayer
 """ ========================================================= """
@@ -22,7 +23,7 @@ $ python testperf.py -n1 "CFR Player 1" -a1 CfrPlayer -n2 "Random Warrior 1" -a2
 def testperf(agent_name1, agent1, agent_name2, agent2):		
 
 	# Init to play 500 games of 1000 rounds
-	num_game = 500
+	num_game = 1
 	max_round = 1000
 	initial_stack = 10000
 	smallblind_amount = 20
@@ -36,7 +37,7 @@ def testperf(agent_name1, agent1, agent_name2, agent2):
 	
 	# Register players
 	config.register_player(name=agent_name1, algorithm=CfrPlayer())
-	config.register_player(name=agent_name2, algorithm=RandomPlayer())
+	config.register_player(name=agent_name2, algorithm=HonestPlayer())
 	# config.register_player(name=agent_name1, algorithm=agent1())
 	# config.register_player(name=agent_name2, algorithm=agent2())
 	

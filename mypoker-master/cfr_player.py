@@ -6,7 +6,7 @@ import pprint
 
 class CfrPlayer(BasePokerPlayer):
 
-  def __init__(self):
+  def __init__(self, strategy_num):
     super(CfrPlayer, self).__init__()
     self.info_set = ''
     self.street_index = 0
@@ -14,7 +14,7 @@ class CfrPlayer(BasePokerPlayer):
     self.num_com_cards = 0
     self.last_action_index = -1
     strategy = {}
-    strategy_file_path = './training_output'
+    strategy_file_path = './outputs/training_output' + str(strategy_num)
     with open(strategy_file_path, 'r') as strategy_file:
         for line in strategy_file:
             if not line.strip() or line.strip().startswith('#'):
@@ -113,7 +113,7 @@ class CfrPlayer(BasePokerPlayer):
     try:
         node_strategy = self.strategy[self.info_set]
     except KeyError:
-        print(self.info_set)
+        # print(self.info_set)
         return valid_actions[1]['action']
     action = self.select_action(node_strategy, valid_actions)
     return action  # action returned here is sent to the poker engine
@@ -129,6 +129,17 @@ class CfrPlayer(BasePokerPlayer):
 
 
   def receive_street_start_message(self, street, round_state):
+
+    if self.num_hole_cards != 0:
+        current_street_history = round_state['action_histories'][self.convert_street_index_to_name(self.street_index)]
+        while self.last_action_index != len(current_street_history) - 1:
+            self.last_action_index += 1
+            action = current_street_history[self.last_action_index]['action']
+            if action == 'SMALLBLIND' or action == 'BIGBLIND':
+                continue
+            else:
+                self.info_set += self.convert_action_to_str(action)
+
     # steet_index keeps the index of current street in the action histories of round state
     self.street_index = len(round_state['action_histories']) - 1
     self.last_action_index = -1
