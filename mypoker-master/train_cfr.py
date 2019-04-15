@@ -106,10 +106,12 @@ def _write_strategy(game_tree, iterations, output_path):
 #     _write_strategy(cfr.game_tree, iterations, output_path)
 
 if __name__ == "__main__":
-    iterations = 50
-    output_path = './training_output'
-
+    group = 200
+    iterations = 500
     cfr = Cfr()
-    cfr.train(iterations)
-
-    _write_strategy(cfr.game_tree, iterations, output_path)
+    for g in range(group):
+        print('training group ' + str(g))
+        for i in range(iterations):
+            output_path = './training_output' + str(i)
+            cfr.train(iterations)
+            _write_strategy(cfr.game_tree, iterations, output_path)

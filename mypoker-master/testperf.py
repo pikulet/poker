@@ -24,8 +24,8 @@ def testperf(agent_name1, agent1, agent_name2, agent2):
 	# Init to play 500 games of 1000 rounds
 	num_game = 500
 	max_round = 1000
-	initial_stack = 1000
-	smallblind_amount = 10
+	initial_stack = 10000
+	smallblind_amount = 20
 
 	# Init pot of players
 	agent1_pot = 0
@@ -35,7 +35,7 @@ def testperf(agent_name1, agent1, agent_name2, agent2):
 	config = setup_config(max_round=max_round, initial_stack=initial_stack, small_blind_amount=smallblind_amount)
 	
 	# Register players
-	config.register_player(name=agent_name1, algorithm=StarPlayer())
+	config.register_player(name=agent_name1, algorithm=CfrPlayer())
 	config.register_player(name=agent_name2, algorithm=RandomPlayer())
 	# config.register_player(name=agent_name1, algorithm=agent1())
 	# config.register_player(name=agent_name2, algorithm=agent2())
@@ -63,7 +63,7 @@ def testperf(agent_name1, agent1, agent_name2, agent2):
 		print("\n Congratulations! " + agent_name1 + " has won.")
 		# print("\n Random Player has won!")
 	else:
-		Print("\n It's a draw!") 
+		print("\n It's a draw!")
 
 
 def parse_arguments():
