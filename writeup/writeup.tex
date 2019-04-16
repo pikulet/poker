@@ -57,7 +57,7 @@ These evaluators aim to classify cards into groups of similar play styles, which
 \subsubsection{Card Isomorphism}
 To effectively evaluate hand strengths, it is imperative to simplify the hands using abstraction techniques like card isomorphism. Card isomorphism exploits the fact that a card's suit has no inherent value. It is only useful to know the values of the hole cards and whether they are suited (have the same suit). For example, A$\clubsuit$ A$\clubsuit$ has the same winning chance as A$\spadesuit$ A$\spadesuit$, and these hole cards would be played with similar strategy.
 
-Card isomorphism can reduce the number of game states in the pre-flop stage from ${52 \choose 2} = 1326$ to $2 \times {13 \choose 2} + 13 = 169$ states. Each state is identified using the value of the cards, and a boolean indicator if they are the suited.
+Card isomorphism can reduce the number of game states in the pre-flop street from ${52 \choose 2} = 1326$ to $2 \times {13 \choose 2} + 13 = 169$ states. Each state is identified using the value of the cards, and a boolean indicator if they are the suited.
 
 \subsubsection{Percentile Bucketing}
 However, card isomorphism does not simplify our the game complexity enough. We employ a second layer of abstraction, card bucketing, to group cards of similar strengths together. Two sets of hole cards like K$\heartsuit$ Q$\diamondsuit$ and Q$\diamondsuit$ J$\heartsuit$ can be handled with the same strategy.
@@ -67,8 +67,6 @@ Ganzfried and Sandholm found that using too many buckets meant that the training
 Our heuristic for bucketing is the expected win rate of a hand. We used a Monte-Carlo simulation to generate these win rates. In each street (pre-flop, flop, turn, river), we ran a Monte-Carlo Simulation. 1000 different hands were generated each time, with the hands consisting of two pairs of hole cards and 0, 3, 4 or 5 community cards depending on the street. For each of these 1000 hands, 500 Monte-Carlo simulations were run to determine the win rate of the hand.
 
 We used a percentile-win-rate clustering method, so the first bucket comprises the 20\% of cards with the lowest win rates. Effectively, each bucket is identified by a minimum and maximum expected win rate.
-
-can probably put a table here
 
 In bucketing, hands can move into different buckets depending on the community cards that have been shown. Johansen suggests using the bucketing sequence in designing the agent, using information on how the hand has moved between buckets in the game. However, we chose to consider each street of the game as being independent and did not incorporate this into our agent.
 
@@ -101,7 +99,7 @@ Our agent incorporates these heuristics into its modelling of the opponent by sa
 
 \section{Counterfactual Regret Minimisation (CFR) Agent}
 
-Our agent is primarily trained using the Counterfactual Regret Minimisation (CFR) Algorithm, which is an extended version of Regret Matching.
+Our agent is primarily trained using the Counterfactual Regret Minimisation (CFR) Algorithm, which is an extended version of Regret Matching. We discuss the relevance of our modelling of the game state (Section 2) and player behaviour (Section 3) in a CFR agent.
 
 \subsection{Regret Matching}
 
@@ -132,19 +130,22 @@ The agent plays the actions with a normalised probability proportional to their 
 
 In the Regret Matching equation, it was not specified how the expected value of winning was calculated. Poker has a large game tree and chance nodes which generate the community cards, making it problematic to accurately define the utility at each terminal node. CFR then extends Regret Matching in sequential games with chance nodes.
 
-importance of bucketing in this part.
+The chance nodes arise from the probabilistic draws of community cards. The counterfactual component takes into account the chance of each decision being made, and the expected utility from that node. The game tree is further complicated because each weighted decision leads to more decisions. Clearly, this is where abstraction is key in clustering nodes together, via the bucketing strategies we discussed earlier. At each chance node, the branching factor is then limited to the number of buckets.
 
 \subsection{Nash Equlibrium}
 
 In \textit{The Mathematics of Poker}, Chen and Ankenman discuss "game-theory optimal" (GTO) solutions in two and three-player variants. They assert that in poker tournaments with more than three players, there could be implicit collusion between players and hence there is no unexploitable strategy. However, when considering two-player games, then a Nash Equilibrium does exist. 
 
-Over time, we expect the absolute regret for each action to be minimised. Suppose for a contradiction that this is not the case, then there exist an action $x'$ such that $Regret(x')$ is not the minimum. Then, there exists a non-zero probability of playing $x'$. In that case, playing the current strategy with action $x'$ results in a higher expected gain. As $CurrentUtility()$ decreases, $Regret(x')$ decreases.
+Over time, we expect the absolute regret for each action to be minimised. Intuitively, the minimisation occurs because regret is undesirable. Suppose that $\exists$ action $x : Regret(x)$ is not the minimised. Since there exists a lower regret value for action $x$, and given that $ActionUtility(x)$ is constant, then there exists a higher $CurrentUtility()$ value when playing action $x$. Since our agent is probabilistic, it will take action $x$ with a non-zero probability. By Murphy's Law, this will take place with a  sufficiently large number of training cycles. Then, the agent will discover the higher $CurrentUtility()$ including action $x$. As $CurrentUtility$ increases, $Regret(x)$ decreases to an eventual minimum.
 
-For all actions $x$, $Regret(x)$ continually decreases. However, we have yet to prove the converge of $Regret(x)$ to a minimum value. Suppose that the value of $Regret(x)$ does not converge to a minimum. Then, 
+** CAN ALSO DISCUSS WHY THERE EXISTS A MINIMUM FOR ALL REGRET VALUES (As the regret decreases, agent plays that action less, which will only increase the regret of that action?)
 
-spne shown to approximate equilibrium
+$Regret(x)$ is inversely proportional to $CurrentUtility$. From the above claim, $\forall x, Regret(x)$ is minimised. The minimisation of regret is also the maximisation of $CurrentUtility$. Eventually, the CFR agent converges to an equilibrium.
 
-HOW MANY TRAINING CYCLES DID WE USE
+In training our CFR agent, we used xx cycles. We find this to be a sufficiently large number of training cycles because.....
+
+*How does maximising utility mean that we cannot be exploited?
+*does our agent sweep or gain slight advantages over the 10000 mark?
 
 While an agent following an optimal strategy may not win the most amount of money from their opponents, they cannot be exploited in the long run. Nevertheless, GTO agents are vulnerable to agents which often change their strategy mid-game.
 
@@ -162,17 +163,22 @@ Besides using noise to generate randomness, we can also change our play style to
 
 ** DOES CFR CONVERGE TO A PARTICULAR AGGRESSIVENESS AND TIGHTNESS VALUE? LITERATURE SUGGESTS SO.
 
-\section{Training with a Deep-Q Network}
+\section{Training with a Deep-Q Network (DQN)}
 
-While we modelled our agent using knowledge-based approaches, we also recognise the importance of using a data-based approach to train our agent. Data-based approaches are useful because they do not require domain-specific knowledge of the games.
+Yakovenko et al posited that a trained model is always more competitive than the model generating the data, since the model was trained to optimise relative to the data. Their team was developing a generic poker agent trained on a Deep-Q Network to play different forms of poker. We used the same technique, though our agent is only expected to play Limit Poker.
 
-Yakovenko et al posited that a trained model is always more competitive than the model generating the data, since the model was trained to optimise relative to the data. Their team was developing a generic poker agent trained on a Deep-Q Network to play different forms of poker. We used the same technique of a reinforcement learning algorithm, though our agent is only expected to play Limit Poker.
+A model-based approach requires the agent to learn game states. Data-based approaches are useful because they do not require domain-specific modelling of games. Here, we map actions to values instead. For every action, we can calculate its expected reward, which is the Q-value. An action-based approach parallels the CFR paradigm. At each layer of the neural network, we have to derive an optimal way to calculate the Q-value of every action. Our agent learns these values using a Deep Q-Network for Reinforcement Learning.
 
 \subsubsection{Deep-Q Algorithm}
-Q-learning aims to maximise the reward (amount of money at the end of the game), over any and all
+Reinforcement learning introduces high flux. As our agent learns more about actions, the Q-values of the actions also change, making it difficult for the values to converge. We introduce a more stable training environment for our agent using a DQN.
 
-this is too complicated let me read first
+Experience Relay in DQN - 
+stores large database of state-action-reward in replay buffer. We train Q with batches of random samples from this buffer. training samples are randomized and behave closer to the supervised learning in Deep Learning.
 
+target network
+- two networks for storing the values of Q. One is constantly updated while the second one, the target network, is synchronized from the first network once a while. We use the target network to retrieve the Q value such that the changes for the target value are less volatile. 
+
+DQN trained with other players to absorb their play styles, as posited by Yakovenko and friends.
 
 \subsection{Initial Training with Simple Heuristic Players}
 A basic agent should win against the RandomPlayer and HonestPlayer, which are provided in the engine.
