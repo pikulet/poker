@@ -1,0 +1,2 @@
+1. 进入train.py, 运行即可进行训练，训练完毕后会将模型参数保存到checkpoint文件夹下。
+2. 如果需要将序列好的模型使用到实战中，需要将DQN的参数打印出来，然后复制到原始的submission项目的DeepQNetworkPlayer.py的DQN_weight里可以。
