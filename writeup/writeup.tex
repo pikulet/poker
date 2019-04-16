@@ -55,9 +55,9 @@ The primary heuristic in a rational poker agent would be the hand strength, beca
 These evaluators aim to classify cards into groups of similar play styles, which are called buckets. Since hand strengths (HS) change across streets as community cards are revealed, the classification key is typically a function of the current hand strength, and the potential hand strength.
 
 \subsubsection{Card Isomorphism}
-To effectively evaluate hand strengths, it is imperative to simplify the hands using abstraction techniques like card isomorphism. Card isomorphism exploits the fact that a card's suit has no inherent value. It is only useful to know whether the two hole cards are suited (have the same suit). For example, A$\clubsuit$ A$\clubsuit$ has the same winning chance as A$\spadesuit$ A$\spadesuit$, and these hole cards would be played with similar strategy.
+To effectively evaluate hand strengths, it is imperative to simplify the hands using abstraction techniques like card isomorphism. Card isomorphism exploits the fact that a card's suit has no inherent value. It is only useful to know the values of the hole cards and whether they are suited (have the same suit). For example, A$\clubsuit$ A$\clubsuit$ has the same winning chance as A$\spadesuit$ A$\spadesuit$, and these hole cards would be played with similar strategy.
 
-Card isomorphism can reduce the number of game states in the pre-flop stage from ${52 \choose 2} = 1326$ to $13 \times 13 = 169$ states. Each state is identified using the value of the cards, and a boolean indicator if they are the suited.
+Card isomorphism can reduce the number of game states in the pre-flop stage from ${52 \choose 2} = 1326$ to $2 \times {13 \choose 2} + 13 = 169$ states. Each state is identified using the value of the cards, and a boolean indicator if they are the suited.
 
 \subsubsection{Percentile Bucketing}
 However, card isomorphism does not simplify our the game complexity enough. We employ a second layer of abstraction, card bucketing, to group cards of similar strengths together. Two sets of hole cards like K$\heartsuit$ Q$\diamondsuit$ and Q$\diamondsuit$ J$\heartsuit$ can be handled with the same strategy.
@@ -144,6 +144,8 @@ For all actions $x$, $Regret(x)$ continually decreases. However, we have yet to 
 
 spne shown to approximate equilibrium
 
+HOW MANY TRAINING CYCLES DID WE USE
+
 While an agent following an optimal strategy may not win the most amount of money from their opponents, they cannot be exploited in the long run. Nevertheless, GTO agents are vulnerable to agents which often change their strategy mid-game.
 
 \subsection{Randomising Strategy}
@@ -162,7 +164,9 @@ Besides using noise to generate randomness, we can also change our play style to
 
 \section{Training with a Deep-Q Network}
 
-While we modelled our agent using knowledge-based approaches, we also recognise the importance of using a data-based approach to train our agent. Yakovenko et al posited that a trained model is always more competitive than the model generating the data, since the model was trained to optimise relative to the data. 
+While we modelled our agent using knowledge-based approaches, we also recognise the importance of using a data-based approach to train our agent. 
+
+Yakovenko et al posited that a trained model is always more competitive than the model generating the data, since the model was trained to optimise relative to the data. 
 
 Yakovenko's team was developing a generic poker agent trained on a Deep-Q Network to play different forms of poker. We used the same technique of a reinforcement learning algorithm, though our agent is only expected to play Limit Poker.
 
