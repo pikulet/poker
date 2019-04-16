@@ -23,7 +23,7 @@ $ python testperf.py -n1 "CFR Player 1" -a1 CfrPlayer -n2 "Random Warrior 1" -a2
 
 def testperf_cfr():
     # Init to play 500 games of 1000 rounds
-    num_game = 1
+    num_game = 10
     max_round = 1000
     initial_stack = 10000
     smallblind_amount = 20
