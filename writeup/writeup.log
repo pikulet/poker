@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6930 64-bit) (preloaded format=pdflatex 2019.3.21)  21 MAR 2019 17:29
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6930 64-bit) (preloaded format=pdflatex 2019.3.21)  16 APR 2019 13:34
 entering extended mode
 **./writeup.tex
 (writeup.tex
@@ -95,19 +95,19 @@ Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
 ) (writeup.aux)
 \openout1 = `writeup.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 47.
-LaTeX Font Info:    ... okay on input line 47.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 47.
-LaTeX Font Info:    ... okay on input line 47.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 47.
-LaTeX Font Info:    ... okay on input line 47.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 47.
-LaTeX Font Info:    ... okay on input line 47.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 47.
-LaTeX Font Info:    ... okay on input line 47.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 47.
-LaTeX Font Info:    ... okay on input line 47.
-LaTeX Font Info:    Try loading font information for OT1+ptm on input line 47.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Try loading font information for OT1+ptm on input line 28.
 
 ("C:\Users\Joyce\AppData\Local\Programs\MiKTeX 2.9\tex/latex/psnfss\ot1ptm.fd"
 File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
@@ -130,128 +130,84 @@ df.mkii"
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <14.4> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 49.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 30.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 49.
+(Font)              <12> on input line 30.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 49.
+(Font)              <8> on input line 30.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 49.
+(Font)              <6> on input line 30.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 49.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 30.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10.95> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 61.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 72.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 72.
-LaTeX Font Info:    Try loading font information for OMS+ptm on input line 81.
- ("C:\Users\Joyce\AppData\Local\Programs\MiKTeX 2.9\tex/latex/psnfss\omsptm.fd"
-File: omsptm.fd 
-)
-LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 81.
-LaTeX Font Info:    Try loading font information for OT1+pcr on input line 99.
- ("C:\Users\Joyce\AppData\Local\Programs\MiKTeX 2.9\tex/latex/psnfss\ot1pcr.fd"
-File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
-)
-LaTeX Font Info:    Try loading font information for OMS+pcr on input line 105.
-
-
-("C:\Users\Joyce\AppData\Local\Programs\MiKTeX 2.9\tex/latex/psnfss\omspcr.fd"
-File: omspcr.fd 
-)
-LaTeX Font Info:    Font shape `OMS/pcr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 105.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <9> on input line 109.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 47.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 111.
-[1{C:/Users/Joyce/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 52.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 53.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 53.
+ [1{C:/Users/Joyce/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}
 
 
 
 ]
-
-LaTeX Warning: Citation `gottlob:nonmon' on page 2 undefined on input line 175.
-
-
-
-LaTeX Warning: Citation `abelson-et-al:scheme' on page 2 undefined on input lin
-e 177.
-
-
-LaTeX Warning: Citation `bgf:Lixto' on page 2 undefined on input line 178.
+[2]
+Underfull \hbox (badness 5460) in paragraph at lines 138--139
+\OT1/ptm/m/n/10 From the above claim, $\OMS/cmsy/m/n/10 8\OML/cmm/m/it/10 x; Re
+gret\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 x\OT1/cmr/m/n/10 )$ \OT1/ptm/m/n/10 is mi
+n-imised.
+ []
 
 
-LaTeX Warning: Citation `brachman-schmolze:kl-one' on page 2 undefined on input
- line 179.
+Underfull \hbox (badness 1048) in paragraph at lines 138--139
+\OT1/ptm/m/n/10 The min-imi-sa-tion of re-gret is also the max-imi-sa-tion of
+ []
 
 
-LaTeX Warning: Citation `nebel:jair-2000' on page 2 undefined on input line 181
-.
+Underfull \hbox (badness 1383) in paragraph at lines 164--165
+[]\OT1/ptm/m/n/10 However, this method is counter-intuitive for a CFR
+ []
+
+[3]
+LaTeX Font Info:    Try loading font information for OMS+ptm on input line 178.
 
 
-LaTeX Warning: Citation `gls:hypertrees' on page 2 undefined on input line 182.
-
-
-
-LaTeX Warning: Citation `levesque:functional-foundations' on page 2 undefined o
-n input line 182.
-
-
-LaTeX Warning: Citation `abelson-et-al:scheme' undefined on input line 183.
-
-
-LaTeX Warning: Citation `bgf:Lixto' undefined on input line 184.
-
-
-LaTeX Warning: Citation `brachman-schmolze:kl-one' undefined on input line 185.
-
-
-
-LaTeX Warning: Citation `gottlob:nonmon' undefined on input line 186.
-
-
-LaTeX Warning: Citation `gls:hypertrees' undefined on input line 187.
-
-
-LaTeX Warning: Citation `levesque:functional-foundations' undefined on input li
-ne 188.
-
-
-LaTeX Warning: Citation `levesque:belief' undefined on input line 189.
-
-
-LaTeX Warning: Citation `nebel:jair-2000' undefined on input line 190.
-
+("C:\Users\Joyce\AppData\Local\Programs\MiKTeX 2.9\tex/latex/psnfss\omsptm.fd"
+File: omsptm.fd 
+)
+LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 178.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <8> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 235.
-No file writeup.bbl.
-[2] (writeup.aux)
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 212.
+(writeup.bbl
 
-LaTeX Warning: There were undefined references.
+LaTeX Warning: Empty `thebibliography' environment on input line 3.
 
- ) 
+) [4] (writeup.aux) ) 
 Here is how much of TeX's memory you used:
- 2656 strings out of 492946
- 40064 string characters out of 3126266
- 116418 words of memory out of 3000000
- 6556 multiletter control sequences out of 15000+200000
- 27384 words of font info for 55 fonts, out of 3000000 for 9000
+ 2592 strings out of 492946
+ 39217 string characters out of 3126266
+ 117418 words of memory out of 3000000
+ 6505 multiletter control sequences out of 15000+200000
+ 20687 words of font info for 42 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 36i,11n,38p,441b,252s stack positions out of 5000i,500n,10000p,200000b,50000s
-{C:/Users/Joyce/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/base/8r.enc
-}<C:/Users/Joyce/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/
-cm/cmsy10.pfb><C:/Users/Joyce/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/pub
-lic/amsfonts/cm/cmsy7.pfb><C:/Users/Joyce/AppData/Local/Programs/MiKTeX 2.9/fon
-ts/type1/urw/courier/ucrr8a.pfb><C:/Users/Joyce/AppData/Local/Programs/MiKTeX 2
-.9/fonts/type1/urw/times/utmb8a.pfb><C:/Users/Joyce/AppData/Local/Programs/MiKT
-eX 2.9/fonts/type1/urw/times/utmr8a.pfb><C:/Users/Joyce/AppData/Local/Programs/
-MiKTeX 2.9/fonts/type1/urw/times/utmri8a.pfb>
-Output written on writeup.pdf (2 pages, 83835 bytes).
+ 36i,11n,38p,744b,252s stack positions out of 5000i,500n,10000p,200000b,50000s
+{C:/Users/Joyce/AppData/Local/Programs/MiKTeX 2.9/fonts/en
+c/dvips/base/8r.enc}<C:/Users/Joyce/AppData/Local/Programs/MiKTeX 2.9/fonts/typ
+e1/public/amsfonts/cm/cmex10.pfb><C:/Users/Joyce/AppData/Local/Programs/MiKTeX 
+2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/Joyce/AppData/Local/Pro
+grams/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/Joyce/AppDa
+ta/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/
+Joyce/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.p
+fb><C:/Users/Joyce/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfont
+s/cm/cmsy7.pfb><C:/Users/Joyce/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/ur
+w/times/utmb8a.pfb><C:/Users/Joyce/AppData/Local/Programs/MiKTeX 2.9/fonts/type
+1/urw/times/utmr8a.pfb><C:/Users/Joyce/AppData/Local/Programs/MiKTeX 2.9/fonts/
+type1/urw/times/utmri8a.pfb>
+Output written on writeup.pdf (4 pages, 121353 bytes).
 PDF statistics:
- 34 PDF objects out of 1000 (max. 8388607)
+ 52 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

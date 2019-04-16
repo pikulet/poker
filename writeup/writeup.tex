@@ -2,17 +2,11 @@
 
 \typeout{IJCAI-18 Instructions for Authors}
 
-% These are the instructions for authors for IJCAI-18.
-% They are the same as the ones for IJCAI-11 with superficical wording
-%   changes only.
-
 \documentclass{article}
 \pdfpagewidth=8.5in
 \pdfpageheight=11in
 % The file ijcai18.sty is the style file for IJCAI-18 (same as ijcai08.sty).
 \usepackage{ijcai18}
-
-% Use the postscript times font!
 \usepackage{times}
 \usepackage{xcolor}
 \usepackage{soul}
@@ -22,27 +16,14 @@
 % the following package is optional:
 %\usepackage{latexsym} 
 
-% Following comment is from ijcai97-submit.tex:
-% The preparation of these files was supported by Schlumberger Palo Alto
-% Research, AT\&T Bell Laboratories, and Morgan Kaufmann Publishers.
-% Shirley Jowell, of Morgan Kaufmann Publishers, and Peter F.
-% Patel-Schneider, of AT\&T Bell Laboratories collaborated on their
-% preparation.
-
-
-\title{Poker Project - Team 47: Modelling Aggressiveness and Looseness of Poker Play}
+\title{Poker Project - Team 47: Modelling Poker Players}
 
 \author{
 AUYOK Sean, CAI Jiaxiu, CHIK Cheng Yao, Joyce YEO Shuhui, ZHUANG Yihui
 \\ 
 National University of Singapore\\
-%
 sean.auyok,e0201975,chikchengyao,joyceyeo,yihui@u.nus.edu
 }
-% If your authors do not fit in the default space, you can increase it 
-% by uncommenting the following (adjust the "2.5in" size to make it fit
-% properly)
-% \setlength\titlebox{2.5in}
 
 \begin{document}
 
@@ -50,155 +31,189 @@ sean.auyok,e0201975,chikchengyao,joyceyeo,yihui@u.nus.edu
 
 \section{Introduction}
 
-In a stochastic game like Limit Poker, how far can we exploit imperfect information to maximise our gains?
+In the quest to understand the human mind, scientists have delved into creating Artificial Intelligence (AI) agents in more structured environments like games. AI agents have long established their dominance in games, perhaps most famously in chess with Deep Blue's win over Garry Kasparov in 1996. The capabilities of AI extend into games with imperfect information, and AI agents have beaten the top human experts. 
+
+An interesting example would be Texas Hold'em Poker, a complex game including elements of bluff from both players. More interestingly, it is not enough to merely win the opponent, but also to win by as large a margin as possible. This paper focuses on our team's development of a poker AI for Heads Up Limit Texas Hold'em played under strict time controls. 
+
+When designing our agent, the prime functionality was for the agent to be rational and able to recognise statistically optimal hands to invest in. Given the limited time for our poker agent to decide on the next action, we employed various optimisation strategies such as using abstraction to reduce the game complexity. In particular, we focus on how our agent abstracts poker hands. 
+
+Upon recognising strong and weak hands, our agent has to be able to make the right decision (whether to fold, call or bet). In order to give our agent the ability to make such decisions without being predictable, we programmed our agent with Counterfactual Regret Minimisation (CFR). CFR allows our agent to quickly find Nash Equilibria and make decisions based on a probability distribution.
+
+However, calculation alone does not make our agent a winner. We trained our agent to have the ability to model and subsequently predict how an opponent is behaving. This enhancement allows our agent to exploit imperfect information and maximise our gains in a stochastic game.
+
+\section{Modelling Game State}
+Poker has a plethora of game states an agent can tap on, such as the hand strength, pot size, money left to name a few. Given the complexity of poker, it would be infeasible to use all the game states in training our agent.
+
+\subsection{Hand Strength}
+The primary heuristic in a rational poker agent would be the hand strength, because that is how poker's end state is eventually evaluated. The player with the higher hand strength clears the pot. There is extensive research on evaluators for hand strength, such as CactusKev, TwoPlusTwo and 7-card.
+
+These evaluators aim to classify cards into groups of similar play styles, which are called buckets. Since hand strengths (HS) change across streets as community cards are revealed, the classification key is typically a function of the current hand strength, and the potential hand strength.
+
+\subsubsection{Card Isomorphism}
+To effectively evaluate hand strengths, it is imperative to simplify the hands using abstraction techniques like card isomorphism. Card isomorphism exploits the fact that a card's suit has no inherent value. It is only useful to know the values of the hole cards and whether they are suited (have the same suit). For example, A$\clubsuit$ A$\clubsuit$ has the same winning chance as A$\spadesuit$ A$\spadesuit$, and these hole cards would be played with similar strategy.
+
+Card isomorphism can reduce the number of game states in the pre-flop street from ${52 \choose 2} = 1326$ to $2 \times {13 \choose 2} + 13 = 169$ states. Each state is identified using the value of the cards, and a boolean indicator if they are the suited.
+
+\subsubsection{Percentile Bucketing}
+However, card isomorphism does not simplify our the game complexity enough. We employ a second layer of abstraction, card bucketing, to group cards of similar strengths together. Two sets of hole cards like K$\heartsuit$ Q$\diamondsuit$ and Q$\diamondsuit$ J$\heartsuit$ can be handled with the same strategy.
+
+Ganzfried and Sandholm found that using too many buckets meant that the training algorithm could not converge sufficiently fast, eventually setting on a 8-12-4-4 bucket size. We simplified their model and chose to use 5 buckets in all streets for our agent.
+
+Our heuristic for bucketing is the expected win rate of a hand. We used a Monte-Carlo simulation to generate these win rates. In each street (pre-flop, flop, turn, river), we ran a Monte-Carlo Simulation. 1000 different hands were generated each time, with the hands consisting of two pairs of hole cards and 0, 3, 4 or 5 community cards depending on the street. For each of these 1000 hands, 500 Monte-Carlo simulations were run to determine the win rate of the hand.
+
+We used a percentile-win-rate clustering method, so the first bucket comprises the 20\% of cards with the lowest win rates. Effectively, each bucket is identified by a minimum and maximum expected win rate.
+
+In bucketing, hands can move into different buckets depending on the community cards that have been shown. Johansen suggests using the bucketing sequence in designing the agent, using information on how the hand has moved between buckets in the game. However, we chose to consider each street of the game as being independent and did not incorporate this into our agent.
+
+\section{Modelling Player Behaviour}
+why do we need to model player behaviour if cfr approximates a gto solution in the long term fro all strategies? 
+
+The current research into poker play suggests that every strategy can be exploited? (what about nash equilibrium LOL)
+
+\subsection{Tightness and Aggressiveness}
+A simple way to characterise player strategies is to consider betting behaviour when the player has weak hands and strong hands. 
+
+When a player receives a weak hand, they could continue playing or choose to fold. This behaviour can be defined on a tightness-looseness scale. A tight player only plays a small percentage of their hands, while a loose player would choose to take risks and make bets based on the potential of the hand. Loose play is called bluffing, and deceives the opponent into over-estimating the agent's hand strength and folding.
+
+Theoretically, a tight play aims to reduce losses in the case of weak hands. However, a very tight play would also mean that the chances to observe the opponent's behaviour is diminished.
+
+When a player receives a strong hand, they could call or raise their bets. This behaviour can be defined on a passiveness-aggressiveness scale. A passive player keeps their bets low and stable. On the other hand, an aggressive player actively makes raises to increase the game stakes. Passive play, or trapping, is another form of deceit which leads opponents to under-estimate the hand strength, thereby continuing to place bets and raise the pot amount.
+
+An aggressive play style hopes to maximise the winnings when the hands are strong. However, an over-aggressive play will also encourage opponents to fold, reducing the overall winnings.
+
+An opponent's strategy at one point in time can be represented as a 2-tuple of (tightness, aggressiveness). The tuple represents an instantaneous strategy as the opponent could change over time to adapt their play to our agent.
+
+\subsection{Heuristics for Tightness and Aggressiveness}
+The interaction with the opponent comes from the betting actions and the showdown. However, not every game ends in a showdown so using card information from the showdown may not be as effective. Hence, our heuristics for player tightness and aggressiveness is derived from the betting actions of folding and raising.
+
+The opponent tightness can be approximated using the folding rate over multiple games. The drawback to using the folding-rate heuristic is that a large number of games is needed to make a prediction. By the time these observations are made, the opponent may have already adopted a different play style.
+
+The opponent aggressiveness can be approximated using the raising rate. We make the assumption that when the opponent has a weak hand, they will only call or fold, and raising is only the result of relatively strong hands.
+
+Our agent incorporates these heuristics into its modelling of the opponent by saving the opponent's action history each round. We extract these features and feed them into our CFR agent.
+
+\section{Counterfactual Regret Minimisation (CFR) Agent}
+
+Our agent is primarily trained using the Counterfactual Regret Minimisation (CFR) Algorithm, which is an extended version of Regret Matching. We discuss the relevance of our modelling of the game state (Section 2) and player behaviour (Section 3) in a CFR agent.
+
+\subsection{Regret Matching}
+
+Regret is a concept of reward relative to an action, and can be positive or negative. It measures how much the agent retrospectively wants to take the action, given the past observations. Regret is then proportional to the loss observed, when the agent did not play the action. Effectively, the agent favours actions that score the highest in the regret heuristic. 
+
+Given the current agent strategy $s$ and the current opponent strategy $s'$, every action $x$ has a regret value that can be formalised:
+
+\begin{center}
+$ActionUtility(x) = E(\{x\}, s')$
+
+$CurrentUtility() = E(s, s')$
+
+$Regret(x) = ActionUtility(x) - CurrentUtility()$
+\end{center}
+
+The regret of an action is how much more the agent expects to win by always playing the action (ActionUtility) vis-a-vis the amount the agent expects to win with its current strategy (CurrentUtility). The expected value of both winnings are calculated relative to the opponent's current strategy.
+
+The equation gives us two important insights into Regret Matching.
 
 \begin{enumerate}
-	\item Functionality, the agent should be rational and be at least able to recognise statistically optimal hole cards which are worth investing in. However, chance alone does not make our agent a winner. In Poker, a core strategy is the ability to model and subsequently predict how an opponent is behaving. This enhancement allows our agent to gain an advantage over randomness, and leave the table with more money.
-	\item Why did you choose this implementation (i.e. why should the reader be interested?)
-	\item What is the result that you achieved? (i.e. why should the reader believe you?)
+	\item $s$ changes based on the updated regrets of the actions. The regret-based agent is engages in reinforcement learning to update its beliefs about each action's regret. Later on, we discuss the convergence of this iterative self-play.
+	\item The regret values of the actions are always relative to a certain opponent strategy. Regret Matching does not consider the case where the opponent changes their strategies over time.
 \end{enumerate}
-It should be about a column long. 
 
-\subsection{Word Processing Software}
+The agent plays the actions with a normalised probability proportional to their positive regret. We work with a discrete probability distribution that can be represented as a 3-tuple for the probability of playing each action (fold, call, raise). For example, one of the tuples generated could be (0.2, 0.3, 0.5).
 
-some text
+\subsubsection{CFR - Extending Regret Matching}
 
-\subsection{Title and Author Information}
+In the Regret Matching equation, it was not specified how the expected value of winning was calculated. Poker has a large game tree and chance nodes which generate the community cards, making it problematic to accurately define the utility at each terminal node. CFR then extends Regret Matching in sequential games with chance nodes.
 
-Center the title on the entire width of the page in a 14-point bold
-font. The title should be capitalized using Title Case. Below it, center author name(s) in a 12-point bold font. On the following line(s) place the affiliations, each affiliation on its own line using a 12-point regular font. Matching between authors and affiliations can be done using superindices. Additionally, a comma-separated email addresses list using a 12-point regular font is also allowed. Credit to a
-sponsoring agency can appear on the first page as a footnote.
+The chance nodes arise from the probabilistic draws of community cards. The counter-factual component takes into account the chance of each decision being made, and the expected utility from that node. The game tree is further complicated because each weighted decision leads to more decisions. Clearly, this is where abstraction is key in clustering nodes together, via the bucketing strategies we discussed earlier. At each chance node, the branching factor is then limited to the number of buckets.
 
-\subsection{Text}
+\subsection{Nash Equlibrium}
 
-The main body of the text immediately follows the abstract. Use
-10-point type in a clear, readable font with 1-point leading (10 on
-11).
+In \textit{The Mathematics of Poker}, Chen and Ankenman discuss "game-theory optimal" (GTO) solutions in two and three-player variants. They assert that in poker tournaments with more than three players, there could be implicit collusion between players and hence there is no unexploitable strategy. However, when considering two-player games, then a Nash Equilibrium does exist. 
 
-Indent when starting a new paragraph, except after major headings.
+Over time, we expect the absolute regret for each action to be minimised. Intuitively, the minimisation occurs because regret is undesirable. Suppose that $\exists$ action $x : Regret(x)$ is not the minimised. Since there exists a lower regret value for action $x$, and given that $ActionUtility(x)$ is constant, then there exists a higher $CurrentUtility()$ value when playing action $x$. Since our agent is probabilistic, it will take action $x$ with a non-zero probability. By Murphy's Law, this will take place with a  sufficiently large number of training cycles. Then, the agent will discover the higher $CurrentUtility()$ including action $x$. As $CurrentUtility$ increases, $Regret(x)$ decreases to an eventual minimum.
 
-\subsection{Headings and Sections}
+** CAN ALSO DISCUSS WHY THERE EXISTS A MINIMUM FOR ALL REGRET VALUES (As the regret decreases, agent plays that action less, which will only increase the regret of that action?)
 
-When necessary, headings should be used to separate major sections of
-your paper. (These instructions use many headings to demonstrate their
-appearance; your paper should have fewer headings.). All headings should be capitalized using Title Case.
+$Regret(x)$ is inversely proportional to $CurrentUtility$. From the above claim, $\forall x, Regret(x)$ is minimised. The minimisation of regret is also the maximisation of $CurrentUtility$. Eventually, the CFR agent converges to an equilibrium.
 
-\subsubsection{Section Headings}
+In training our CFR agent, we used xx cycles. We find this to be a sufficiently large number of training cycles because.....
 
-Print section headings in 12-point bold type in the style shown in
-these instructions. Leave a blank space of approximately 10 points
-above and 4 points below section headings.  Number sections with
-arabic numerals.
+\subsubsection{Unexploitability of CFR Agent}
 
-\subsubsection{Subsection Headings}
+*How does maximising utility mean that we cannot be exploited?
+*does our agent sweep or gain slight advantages over the 10000 mark?implications of being unexploitable>
 
-Print subsection headings in 11-point bold type. Leave a blank space
-of approximately 8 points above and 3 points below subsection
-headings. Number subsections with the section number and the
-subsection number (in arabic numerals) separated by a
-period.
+While an agent following an optimal strategy may not win the most amount of money from their opponents, they cannot be exploited in the long run. Nevertheless, GTO agents are vulnerable to agents which often change their strategy mid-game.
 
-\subsubsection{Subsubsection Headings}
+\subsection{Randomising Strategy}
 
-Print subsubsection headings in 10-point bold type. Leave a blank
-space of approximately 6 points above subsubsection headings. Do not
-number subsubsections.
+The exploitability of opponent behaviour is symmetric, so our agent has to acknowledge that the opponent can similarly extract patterns from our play style. It would then be beneficial to either mask our agent bias or change our play style during the game.
 
-\subsubsection{Special Sections}
+Consider the tuple (0.2, 0.3, 0.5). We note here that the probability of raising is the most significant, so we can deduce that our player hand is strong. The actual magnitude of the probabilities is determined by our player aggressiveness and tightness, and the evaluated hand strength.
 
-You may include an unnumbered acknowledgments section, including
-acknowledgments of help from colleagues.
+\subsubsection{Purification}
 
-Any appendices directly follow the text and look like sections, except
-that they are numbered with capital letters instead of arabic
-numerals.
+Some researchers employ purification techniques to overcome abstraction coarseness. These poker agents prefer the higher-probability actions and ignore actions that are unlikely to be played. In particular, Ganzfried and Sandholm found full purification to be the most effective. The full purification technique let the agent play the most-probable action with probability 1.
 
-The references section is headed ``References,'' printed in the same
-style as a section heading but without a number. A sample list of
-references is given at the end of these instructions. Use a consistent
-format for references, such as that provided by Bib\TeX{}. The reference
-list should not include unpublished work.
+However, we argue against purification because noise in our player behaviour can disrupt the opponent's attempt in identifying patterns in our play style. Yakovenko et al's poker agent player against human players using a fixed play style, and after 100/ 500 hands, the human player was able to recognise mistakes made by the agent and boost their win rate. In particular, the noise supports our deceit techniques of bluffing and trapping.
 
-\subsection{Citations}
+\subsubsection{Changing Play Styles}
+Besides using noise to generate randomness, we can also change our play style to obfuscate our opponents. Given the same hand as above, our agent may instead generate a 3-tuple like (0, 0.3, 0.7), displaying a significantly higher aggressiveness. We can draw an analogy to local-hill search, where continually exploiting the same strategy may just be leading us to local maxima. The sudden exploration could be less optimal, but may also lead us to an improved local maxima. Some researchers use coach-based agents, and this exploration is analogous to fielding a player the opponent has not met before.
 
-Citations within the text should include the author's last name and
-the year of publication, for example~\cite{gottlob:nonmon}.  Append
-lowercase letters to the year in cases of ambiguity.  Treat multiple
-authors as in the following examples:~\cite{abelson-et-al:scheme}
-or~\cite{bgf:Lixto} (for more than two authors) and
-\cite{brachman-schmolze:kl-one} (for two authors).  If the author
-portion of a citation is obvious, omit it, e.g.,
-Nebel~\shortcite{nebel:jair-2000}.  Collapse multiple citations as
-follows:~\cite{gls:hypertrees,levesque:functional-foundations}.
-\nocite{abelson-et-al:scheme}
-\nocite{bgf:Lixto}
-\nocite{brachman-schmolze:kl-one}
-\nocite{gottlob:nonmon}
-\nocite{gls:hypertrees}
-\nocite{levesque:functional-foundations}
-\nocite{levesque:belief}
-\nocite{nebel:jair-2000}
+However, this method is counter-intuitive for a CFR agent(?)
 
-\subsection{Footnotes}
+\section{Training with a Deep-Q Network (DQN)}
 
-Place footnotes at the bottom of the page in a 9-point font.  Refer to
-them with superscript numbers.\footnote{This is how your footnotes
-should appear.} Separate them from the text by a short
-line.\footnote{Note the line separating these footnotes from the
-text.} Avoid footnotes as much as possible; they interrupt the flow of
-the text.
+Yakovenko et al posited that a trained model is always more competitive than the model generating the data, since the model was trained to optimise relative to the data. Their team was developing a generic poker agent trained on a Deep-Q Network to play different forms of poker. We used the same technique, though our agent is only expected to play Limit Poker.
 
-\section{Illustrations}
+A model-based approach requires the agent to learn game states. Data-based approaches are useful because they do not require domain-specific modelling of games. Here, we map actions to values instead. For every action, we can calculate its expected reward, which is the Q-value. An action-based approach parallels the CFR paradigm. At each layer of the neural network, we have to derive an optimal way to calculate the Q-value of every action. Our agent learns these values using a Deep Q-Network for Reinforcement Learning.
 
-Place all illustrations (figures, drawings, tables, and photographs)
-throughout the paper at the places where they are first discussed,
-rather than at the end of the paper. If placed at the bottom or top of
-a page, illustrations may run across both columns.
+\subsubsection{Deep-Q Algorithm}
+Reinforcement learning introduces high flux. As our agent learns more about actions, the Q-values of the actions also change, making it difficult for the values to converge. 
 
-Illustrations must be rendered electronically or scanned and placed
-directly in your document. All illustrations should be in black and
-white, as color illustrations may cause problems. Line weights should
-be 1/2-point or thicker. Avoid screens and superimposing type on
-patterns as these effects may not reproduce well.
+We introduce a more stable training environment for our agent using a DQN with the following traits:
 
-Number illustrations sequentially. Use references of the following
-form: Figure 1, Table 2, etc. Place illustration numbers and captions
-under illustrations. Leave a margin of 1/4-inch around the area
-covered by the illustration and caption.  Use 9-point type for
-captions, labels, and other text in illustrations.
+\begin{itemize}
+	\item Use of two neural networks. The training network is constantly updated in every training iteration, while the target network occasionally synchronises with the training network. The target network stabilises the Q-values used in updating the training.
+	\item Experience Replay. A large database of state-action-reward is stored in a reply buffer. Training samples are randomly picked from this database, mimicking supervised learning with more stable training datasets.
+\end{itemize}
 
-\section*{Acknowledgments}
+The Q-values are learned by playing against different players ( then how is this reinforcement learning?)
 
-The preparation of these instructions and the \LaTeX{} and Bib\TeX{}
-files that implement them was supported by Schlumberger Palo Alto
-Research, AT\&T Bell Laboratories, and Morgan Kaufmann Publishers.
-Preparation of the Microsoft Word file was supported by IJCAI.  An
-early version of this document was created by Shirley Jowell and Peter
-F. Patel-Schneider.  It was subsequently modified by Jennifer
-Ballentine and Thomas Dean, Bernhard Nebel, and Daniel Pagenstecher.
-These instructions are the same as the ones for IJCAI--05, prepared by
-Kurt Steinkraus, Massachusetts Institute of Technology, Computer
-Science and Artificial Intelligence Lab.
+\subsection{Initial Training with Simple Heuristic Players}
+A basic agent should win against the RandomPlayer and HonestPlayer, which are provided in the engine.
+
+Training against RandomPlayer teaches our agent to play rational, statistically-optimising actions. Our agent will learn to make bets on strong hands and fold on weaker ones. 
+
+Given the training against RandomPlayer, we extend the training against HonestPlayer. HonestPlayer is the rational version of RandomPlayer, keeping strong hands and folding weaker ones. By training against HonestPlayer, our agent is able to recognise that the opponents are also rational. The net effect is similar to performing a minimax search with HonestPlayer, and our agent expects HonestPlayer to pick the best action for themselves at each decision node.
+
+We verified Yakovenko's claim, and it is true that our agent is able to win against RandomPlayer (19980-0) and HonestPlayer (20000-0) after 1 game of 500 rounds. More tests can be done to determine the statistical significance of this result. We omit this section because our goal is not to win against RandomPlayer and HonestPlayer.
+
+\subsection{Reinforcement Learning with CFR Agent}
+
+-- explain why we train with CFR agent
+
+\section{Discussion}
+Our poker project takes poker research in two novel directions.
+
+Firstly, we double-trained our CFR agent using Deep-Q Learning.
+
+Secondly, we consider how a Nash Equilibrium in a poker game would manifest in the results. Is the agent always winning?? Is the agent strategy static?? What does being unexploitable mean?
+
+\section{Conclusion}
+
+In designing our agent, we first looked at theoretical considerations of poker play. The concepts were then consolidated into a CFR agent. Our final agent is a product of Deep-Q training against the CFR agent.
+
+\section{Acknowledgments}
 
 \appendix
 
 \section{\LaTeX{} and Word Style Files}\label{stylefiles}
 
-The \LaTeX{} and Word style files are available on the IJCAI--18
-website, {\tt http://www.ijcai-18.org/}.
-These style files implement the formatting instructions in this
-document.
-
-The \LaTeX{} files are {\tt ijcai18.sty} and {\tt ijcai18.tex}, and
-the Bib\TeX{} files are {\tt named.bst} and {\tt ijcai18.bib}. The
-\LaTeX{} style file is for version 2e of \LaTeX{}, and the Bib\TeX{}
-style file is for version 0.99c of Bib\TeX{} ({\em not} version
-0.98i). The {\tt ijcai18.sty} file is the same as the {\tt
-ijcai07.sty} file used for IJCAI--07.
-
 %% The file named.bst is a bibliography style file for BibTeX 0.99c
 \bibliographystyle{named}
-\bibliography{ijcai18}
+\bibliography{references}
 
 \end{document}
 
