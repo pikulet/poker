@@ -9,10 +9,9 @@ class CfrPlayer(BasePokerPlayer):
   def __init__(self):
     super(CfrPlayer, self).__init__()
     self.info_set = ''
-    self.street_index = 0
+    self.bucket_seq = []
     self.num_hole_cards = 0
     self.num_com_cards = 0
-    self.last_action_index = -1
     strategy_num=14
     strategy = {}
     strategy_file_path = './outputs/training_output' + str(strategy_num)
@@ -51,24 +50,28 @@ class CfrPlayer(BasePokerPlayer):
     if len(hole_card) != self.num_hole_cards:
         self.num_hole_cards = len(hole_card)
         current_hand_bucket = get_hand_bucket(hole_card)
-        self.info_set += str(current_hand_bucket)
-        self.info_set += ':'
+        self.bucket_seq.append(current_hand_bucket)
+
 
     if len(round_state['community_card']) != self.num_com_cards:
         self.num_com_cards = len(round_state['community_card'])
         com_cards = gen_cards(round_state['community_card'])
         current_hand_bucket = get_hand_bucket(hole_card + com_cards)
-        self.info_set += str(current_hand_bucket)
-        self.info_set += ':'
+        self.bucket_seq.append(current_hand_bucket)
 
-    current_street_history = round_state['action_histories'][self.convert_street_index_to_name(self.street_index)]
-    while self.last_action_index != len(current_street_history) - 1:
-        self.last_action_index += 1
-        action = current_street_history[self.last_action_index]['action']
-        if action == 'SMALLBLIND' or action == 'BIGBLIND':
-            continue
-        else :
-            self.info_set += self.convert_action_to_str(action)
+    cur_infoset = ''
+    for i in range(len(round_state['action_histories'])):
+        if i != 0:
+            cur_infoset += ':'
+        cur_infoset = cur_infoset + str(self.bucket_seq[i]) + ':'
+        current_street_history = round_state['action_histories'][self.convert_street_index_to_name(i)]
+        for j in range(len(current_street_history)):
+            action = current_street_history[j]['action']
+            if action == 'SMALLBLIND' or action == 'BIGBLIND':
+                continue
+            else:
+                cur_infoset += self.convert_action_to_str(action)
+    self.info_set = cur_infoset
 
   def select_action(self, strategy, valid_actions):
     """Randomly select action from node strategy.
@@ -124,28 +127,13 @@ class CfrPlayer(BasePokerPlayer):
 
   def receive_round_start_message(self, round_count, hole_card, seats):
     self.info_set = ''
-    self.street_index = 0
     self.num_hole_cards = 0
     self.num_com_cards = 0
+    self.bucket_seq =[]
 
 
   def receive_street_start_message(self, street, round_state):
-
-    if self.num_hole_cards != 0:
-        current_street_history = round_state['action_histories'][self.convert_street_index_to_name(self.street_index)]
-        while self.last_action_index != len(current_street_history) - 1:
-            self.last_action_index += 1
-            action = current_street_history[self.last_action_index]['action']
-            if action == 'SMALLBLIND' or action == 'BIGBLIND':
-                continue
-            else:
-                self.info_set += self.convert_action_to_str(action)
-
-    # steet_index keeps the index of current street in the action histories of round state
-    self.street_index = len(round_state['action_histories']) - 1
-    self.last_action_index = -1
-    if self.num_hole_cards != 0:
-        self.info_set += ':'
+    pass
 
   def receive_game_update_message(self, action, round_state):
     pass

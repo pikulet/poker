@@ -269,6 +269,8 @@ with tf.Session() as sess:
 
                 is_last_round = emul._is_last_round(game_state, emul.game_rule)
                 game_state, events = emul.start_new_round(game_state)
+                cfr_player = emul.fetch_player('1')
+                cfr_player.receive_round_start_message(0,0,0) # dummy args
 
                 last_img_state = None
                 last_action_num = None
