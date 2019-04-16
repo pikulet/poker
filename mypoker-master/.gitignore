@@ -2,3 +2,6 @@
 .idea/
 .idea/misc.xml
 .idea/workspace.xml
+training_output
+../.idea/
+tqdm/

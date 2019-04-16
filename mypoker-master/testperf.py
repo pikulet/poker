@@ -9,21 +9,24 @@ from argparse import ArgumentParser
 
 """ =========== *Remember to import your agent!!! =========== """
 from randomplayer import RandomPlayer
+from honest_player import HonestPlayer
 from ourplayer import StarPlayer
+from cfr_player import CfrPlayer
 """ ========================================================= """
 
 """ Example---To run testperf.py with random warrior AI against itself. 
 
 $ python testperf.py -n1 "Random Warrior 1" -a1 RandomPlayer -n2 "Random Warrior 2" -a2 RandomPlayer
+$ python testperf.py -n1 "CFR Player 1" -a1 CfrPlayer -n2 "Random Warrior 1" -a2 RandomPlayer
 """
 
 def testperf(agent_name1, agent1, agent_name2, agent2):		
 
 	# Init to play 500 games of 1000 rounds
-	num_game = 500
+	num_game = 1
 	max_round = 1000
-	initial_stack = 1000
-	smallblind_amount = 10
+	initial_stack = 10000
+	smallblind_amount = 20
 
 	# Init pot of players
 	agent1_pot = 0
@@ -33,8 +36,8 @@ def testperf(agent_name1, agent1, agent_name2, agent2):
 	config = setup_config(max_round=max_round, initial_stack=initial_stack, small_blind_amount=smallblind_amount)
 	
 	# Register players
-	config.register_player(name=agent_name1, algorithm=StarPlayer())
-	config.register_player(name=agent_name2, algorithm=RandomPlayer())
+	config.register_player(name=agent_name1, algorithm=CfrPlayer(14))
+	config.register_player(name=agent_name2, algorithm=HonestPlayer())
 	# config.register_player(name=agent_name1, algorithm=agent1())
 	# config.register_player(name=agent_name2, algorithm=agent2())
 	
@@ -61,7 +64,7 @@ def testperf(agent_name1, agent1, agent_name2, agent2):
 		print("\n Congratulations! " + agent_name1 + " has won.")
 		# print("\n Random Player has won!")
 	else:
-		Print("\n It's a draw!") 
+		print("\n It's a draw!")
 
 
 def parse_arguments():
