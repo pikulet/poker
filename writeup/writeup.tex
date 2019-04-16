@@ -41,11 +41,6 @@ Upon recognising strong and weak hands, our agent has to be able to make the rig
 
 However, calculation alone does not make our agent a winner. We trained our agent to have the ability to model and subsequently predict how an opponent is behaving. This enhancement allows our agent to exploit imperfect information and maximise our gains in a stochastic game.
 
-\begin{enumerate}
-	\item Why did you choose this implementation (i.e. why should the reader be interested?)
-	\item What is the result that you achieved? (i.e. why should the reader believe you?)
-\end{enumerate}
-
 \section{Modelling Game State}
 Poker has a plethora of game states an agent can tap on, such as the hand strength, pot size, money left to name a few. Given the complexity of poker, it would be infeasible to use all the game states in training our agent.
 
@@ -126,11 +121,11 @@ The equation gives us two important insights into Regret Matching.
 
 The agent plays the actions with a normalised probability proportional to their positive regret. We work with a discrete probability distribution that can be represented as a 3-tuple for the probability of playing each action (fold, call, raise). For example, one of the tuples generated could be (0.2, 0.3, 0.5).
 
-\subsection{CFR - Extending Regret Matching}
+\subsubsection{CFR - Extending Regret Matching}
 
 In the Regret Matching equation, it was not specified how the expected value of winning was calculated. Poker has a large game tree and chance nodes which generate the community cards, making it problematic to accurately define the utility at each terminal node. CFR then extends Regret Matching in sequential games with chance nodes.
 
-The chance nodes arise from the probabilistic draws of community cards. The counterfactual component takes into account the chance of each decision being made, and the expected utility from that node. The game tree is further complicated because each weighted decision leads to more decisions. Clearly, this is where abstraction is key in clustering nodes together, via the bucketing strategies we discussed earlier. At each chance node, the branching factor is then limited to the number of buckets.
+The chance nodes arise from the probabilistic draws of community cards. The counter-factual component takes into account the chance of each decision being made, and the expected utility from that node. The game tree is further complicated because each weighted decision leads to more decisions. Clearly, this is where abstraction is key in clustering nodes together, via the bucketing strategies we discussed earlier. At each chance node, the branching factor is then limited to the number of buckets.
 
 \subsection{Nash Equlibrium}
 
@@ -144,8 +139,10 @@ $Regret(x)$ is inversely proportional to $CurrentUtility$. From the above claim,
 
 In training our CFR agent, we used xx cycles. We find this to be a sufficiently large number of training cycles because.....
 
+\subsubsection{Unexploitability of CFR Agent}
+
 *How does maximising utility mean that we cannot be exploited?
-*does our agent sweep or gain slight advantages over the 10000 mark?
+*does our agent sweep or gain slight advantages over the 10000 mark?implications of being unexploitable>
 
 While an agent following an optimal strategy may not win the most amount of money from their opponents, they cannot be exploited in the long run. Nevertheless, GTO agents are vulnerable to agents which often change their strategy mid-game.
 
@@ -155,13 +152,16 @@ The exploitability of opponent behaviour is symmetric, so our agent has to ackno
 
 Consider the tuple (0.2, 0.3, 0.5). We note here that the probability of raising is the most significant, so we can deduce that our player hand is strong. The actual magnitude of the probabilities is determined by our player aggressiveness and tightness, and the evaluated hand strength.
 
+\subsubsection{Purification}
+
 Some researchers employ purification techniques to overcome abstraction coarseness. These poker agents prefer the higher-probability actions and ignore actions that are unlikely to be played. In particular, Ganzfried and Sandholm found full purification to be the most effective. The full purification technique let the agent play the most-probable action with probability 1.
 
 However, we argue against purification because noise in our player behaviour can disrupt the opponent's attempt in identifying patterns in our play style. Yakovenko et al's poker agent player against human players using a fixed play style, and after 100/ 500 hands, the human player was able to recognise mistakes made by the agent and boost their win rate. In particular, the noise supports our deceit techniques of bluffing and trapping.
 
+\subsubsection{Changing Play Styles}
 Besides using noise to generate randomness, we can also change our play style to obfuscate our opponents. Given the same hand as above, our agent may instead generate a 3-tuple like (0, 0.3, 0.7), displaying a significantly higher aggressiveness. We can draw an analogy to local-hill search, where continually exploiting the same strategy may just be leading us to local maxima. The sudden exploration could be less optimal, but may also lead us to an improved local maxima. Some researchers use coach-based agents, and this exploration is analogous to fielding a player the opponent has not met before.
 
-** DOES CFR CONVERGE TO A PARTICULAR AGGRESSIVENESS AND TIGHTNESS VALUE? LITERATURE SUGGESTS SO.
+However, this method is counter-intuitive for a CFR agent(?)
 
 \section{Training with a Deep-Q Network (DQN)}
 
@@ -170,15 +170,16 @@ Yakovenko et al posited that a trained model is always more competitive than the
 A model-based approach requires the agent to learn game states. Data-based approaches are useful because they do not require domain-specific modelling of games. Here, we map actions to values instead. For every action, we can calculate its expected reward, which is the Q-value. An action-based approach parallels the CFR paradigm. At each layer of the neural network, we have to derive an optimal way to calculate the Q-value of every action. Our agent learns these values using a Deep Q-Network for Reinforcement Learning.
 
 \subsubsection{Deep-Q Algorithm}
-Reinforcement learning introduces high flux. As our agent learns more about actions, the Q-values of the actions also change, making it difficult for the values to converge. We introduce a more stable training environment for our agent using a DQN.
+Reinforcement learning introduces high flux. As our agent learns more about actions, the Q-values of the actions also change, making it difficult for the values to converge. 
 
-Experience Relay in DQN - 
-stores large database of state-action-reward in replay buffer. We train Q with batches of random samples from this buffer. training samples are randomized and behave closer to the supervised learning in Deep Learning.
+We introduce a more stable training environment for our agent using a DQN with the following traits:
 
-target network
-- two networks for storing the values of Q. One is constantly updated while the second one, the target network, is synchronized from the first network once a while. We use the target network to retrieve the Q value such that the changes for the target value are less volatile. 
+\begin{itemize}
+	\item Use of two neural networks. The training network is constantly updated in every training iteration, while the target network occasionally synchronises with the training network. The target network stabilises the Q-values used in updating the training.
+	\item Experience Replay. A large database of state-action-reward is stored in a reply buffer. Training samples are randomly picked from this database, mimicking supervised learning with more stable training datasets.
+\end{itemize}
 
-DQN trained with other players to absorb their play styles, as posited by Yakovenko and friends.
+The Q-values are learned by playing against different players ( then how is this reinforcement learning?)
 
 \subsection{Initial Training with Simple Heuristic Players}
 A basic agent should win against the RandomPlayer and HonestPlayer, which are provided in the engine.
