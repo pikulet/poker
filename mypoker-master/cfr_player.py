@@ -63,7 +63,11 @@ class CfrPlayer(BasePokerPlayer):
     current_street_history = round_state['action_histories'][self.convert_street_index_to_name(self.street_index)]
     while self.last_action_index != len(current_street_history) - 1:
         self.last_action_index += 1
-        action = current_street_history[self.last_action_index]['action']
+        try:
+            action = current_street_history[self.last_action_index]['action']
+        except IndexError:
+            print("index error occured with current street history of length " + str(len(current_street_history))
+                  + "last action index is " + str(self.last_action_index) + "current infoset is " + self.info_set)
         if action == 'SMALLBLIND' or action == 'BIGBLIND':
             continue
         else :
