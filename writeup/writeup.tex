@@ -140,7 +140,7 @@ In \textit{The Mathematics of Poker}, Chen and Ankenman discuss "game-theory opt
 
 Over time, we expect the absolute regret for each action to be minimised. Suppose for a contradiction that this is not the case, then there exist an action $x'$ such that $Regret(x')$ is not the minimum. Then, there exists a non-zero probability of playing $x'$. In that case, playing the current strategy with action $x'$ results in a higher expected gain. As $CurrentUtility()$ decreases, $Regret(x')$ decreases.
 
-For all actions $x$, $Regret(x)$ continually decreases. However, we have yet to prove the converge of $Regret(x)$ to a minimum value.
+For all actions $x$, $Regret(x)$ continually decreases. However, we have yet to prove the converge of $Regret(x)$ to a minimum value. Suppose that the value of $Regret(x)$ does not converge to a minimum. Then, 
 
 spne shown to approximate equilibrium
 
@@ -164,11 +164,9 @@ Besides using noise to generate randomness, we can also change our play style to
 
 \section{Training with a Deep-Q Network}
 
-While we modelled our agent using knowledge-based approaches, we also recognise the importance of using a data-based approach to train our agent. 
+While we modelled our agent using knowledge-based approaches, we also recognise the importance of using a data-based approach to train our agent. Data-based approaches are useful because they do not require domain-specific knowledge of the games.
 
-Yakovenko et al posited that a trained model is always more competitive than the model generating the data, since the model was trained to optimise relative to the data. 
-
-Yakovenko's team was developing a generic poker agent trained on a Deep-Q Network to play different forms of poker. We used the same technique of a reinforcement learning algorithm, though our agent is only expected to play Limit Poker.
+Yakovenko et al posited that a trained model is always more competitive than the model generating the data, since the model was trained to optimise relative to the data. Their team was developing a generic poker agent trained on a Deep-Q Network to play different forms of poker. We used the same technique of a reinforcement learning algorithm, though our agent is only expected to play Limit Poker.
 
 \subsubsection{Deep-Q Algorithm}
 Q-learning aims to maximise the reward (amount of money at the end of the game), over any and all
@@ -179,9 +177,11 @@ this is too complicated let me read first
 \subsection{Initial Training with Simple Heuristic Players}
 A basic agent should win against the RandomPlayer and HonestPlayer, which are provided in the engine.
 
-Training against RandomPlayer teaches our agent to play rational, statistically-optimising actions. Our agent will learn to make bets on strong hands and fold on weaker ones. Given the training against RandomPlayer, we extend the training against HonestPlayer. Our intermediate player is now a statistically-optimising player that capitalises on hand strengths.
+Training against RandomPlayer teaches our agent to play rational, statistically-optimising actions. Our agent will learn to make bets on strong hands and fold on weaker ones. 
 
--- explain why we train against these 2 players
+Given the training against RandomPlayer, we extend the training against HonestPlayer. HonestPlayer is the rational version of RandomPlayer, keeping strong hands and folding weaker ones. By training against HonestPlayer, our agent is able to recognise that the opponents are also rational. The net effect is similar to performing a minimax search with HonestPlayer, and our agent expects HonestPlayer to pick the best action for themselves at each decision node.
+
+We verified Yakovenko's claim, and it is true that our agent is able to win against RandomPlayer (19980-0) and HonestPlayer (20000-0) after 1 game of 500 rounds. More tests can be done to determine the statistical significance of this result. We omit this section because our goal is not to win against RandomPlayer and HonestPlayer.
 
 \subsection{Reinforcement Learning with CFR Agent}
 
