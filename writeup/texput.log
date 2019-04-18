@@ -1,16 +1,16 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6930 64-bit) (preloaded format=pdflatex 2019.3.21)  13 APR 2019 08:52
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6930 64-bit) (preloaded format=pdflatex 2019.3.21)  18 APR 2019 18:03
 entering extended mode
-**ijcai18.tex
+**references.tex
 
 ! Emergency stop.
-<*> ijcai18.tex
-               
+<*> references.tex
+                  
 *** (job aborted, file error in nonstop mode)
 
  
 Here is how much of TeX's memory you used:
  2 strings out of 492946
- 17 string characters out of 3126266
+ 20 string characters out of 3126266
  56557 words of memory out of 3000000
  4004 multiletter control sequences out of 15000+200000
  3640 words of font info for 14 fonts, out of 3000000 for 9000
