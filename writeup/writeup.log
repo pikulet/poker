@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6930 64-bit) (preloaded format=pdflatex 2019.3.21)  18 APR 2019 09:53
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6930 64-bit) (preloaded format=pdflatex 2019.3.21)  18 APR 2019 11:36
 entering extended mode
 **./writeup.tex
 (writeup.tex
@@ -140,39 +140,32 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 30.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10.95> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 49.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 51.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 52.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 54.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 53.
+(Font)              <7> on input line 55.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 53.
+(Font)              <5> on input line 55.
  [1{C:/Users/Joyce/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}
 
 
 
 ]
 [2]
-Underfull \hbox (badness 5460) in paragraph at lines 137--138
-\OT1/ptm/m/n/10 From the above claim, $\OMS/cmsy/m/n/10 8\OML/cmm/m/it/10 x; Re
-gret\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 x\OT1/cmr/m/n/10 )$ \OT1/ptm/m/n/10 is mi
-n-imised.
- []
-
-
-Underfull \hbox (badness 1048) in paragraph at lines 137--138
+Underfull \hbox (badness 1048) in paragraph at lines 133--134
 \OT1/ptm/m/n/10 The min-imi-sa-tion of re-gret is also the max-imi-sa-tion of
  []
 
 [3]
-LaTeX Font Info:    Try loading font information for OMS+ptm on input line 179.
+LaTeX Font Info:    Try loading font information for OMS+ptm on input line 174.
 
 
 ("C:\Users\Joyce\AppData\Local\Programs\MiKTeX 2.9\tex/latex/psnfss\omsptm.fd"
 File: omsptm.fd 
 )
 LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 179.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 174.
 (writeup.bbl
 
 LaTeX Warning: Empty `thebibliography' environment on input line 3.
@@ -181,25 +174,26 @@ LaTeX Warning: Empty `thebibliography' environment on input line 3.
 Here is how much of TeX's memory you used:
  2588 strings out of 492946
  39172 string characters out of 3126266
- 118418 words of memory out of 3000000
+ 117418 words of memory out of 3000000
  6502 multiletter control sequences out of 15000+200000
  19061 words of font info for 40 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 36i,11n,38p,744b,252s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 36i,11n,38p,620b,252s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Users/Joyce/AppData/Local/Programs/MiKTeX 2.9/fonts/en
 c/dvips/base/8r.enc}<C:/Users/Joyce/AppData/Local/Programs/MiKTeX 2.9/fonts/typ
 e1/public/amsfonts/cm/cmex10.pfb><C:/Users/Joyce/AppData/Local/Programs/MiKTeX 
 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/Joyce/AppData/Local/Pro
-grams/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/Joyce/AppDa
-ta/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/
-Joyce/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.p
-fb><C:/Users/Joyce/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/urw/times/utmb
-8a.pfb><C:/Users/Joyce/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/urw/times/
-utmr8a.pfb><C:/Users/Joyce/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/urw/ti
-mes/utmri8a.pfb>
-Output written on writeup.pdf (4 pages, 115087 bytes).
+grams/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/Joyce/AppDa
+ta/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users
+/Joyce/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr7.pf
+b><C:/Users/Joyce/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts
+/cm/cmsy10.pfb><C:/Users/Joyce/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/ur
+w/times/utmb8a.pfb><C:/Users/Joyce/AppData/Local/Programs/MiKTeX 2.9/fonts/type
+1/urw/times/utmr8a.pfb><C:/Users/Joyce/AppData/Local/Programs/MiKTeX 2.9/fonts/
+type1/urw/times/utmri8a.pfb>
+Output written on writeup.pdf (4 pages, 117369 bytes).
 PDF statistics:
- 48 PDF objects out of 1000 (max. 8388607)
+ 52 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

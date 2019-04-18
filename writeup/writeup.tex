@@ -31,15 +31,17 @@ sean.auyok,e0201975,chikchengyao,joyceyeo,yihui@u.nus.edu
 
 \section{Introduction}
 
+WHAT IS OUR THESIS
+
 In the quest to understand the human mind, scientists have delved into designing Artificial Intelligence (AI) agents in more structured environments like games. AI agents have long established their dominance in games, perhaps most famously in chess with Deep Blue's win over Garry Kasparov in 1996. The capabilities of AI extend to imperfect information games, where AI agents have beaten top human experts. 
 
 An interesting example would be Texas Hold'em Poker, a complex game including elements of chance and bluff. More interestingly, it is not enough to merely win the opponent, but also to win by as large a margin as possible. This paper focuses on our team's development of a poker AI for Heads Up Limit Texas Hold'em played under strict time controls. 
 
-When designing our agent, the prime functionality was for the agent to be rational and able to recognise statistically optimal hands to invest in. Given the limited time for our poker agent to decide on the next action, we employed various optimisation strategies such as using abstraction to reduce the game complexity. For instance, we taught our agent to cluster poker hands together (Section 2).
+When designing our agent, the main functionality was for the agent to be rational and able to recognise statistically optimal hands to invest in. Given the limited time for our poker agent to decide on the next action, we employed various optimisation strategies such as using abstraction to reduce the game complexity. For instance, we taught our agent to cluster poker hands together (Section 2).
 
-Upon recognising strong and weak hands, our agent has to be able to make the right decision (whether to fold, call or bet). We give our agent the ability to make such decisions without being predictable using Counterfactual Regret Minimisation (CFR). We taught our agent to aggregate opponent behaviour (Section 3) using betting sequences. At each decision node, the CFR agent takes each action with a certain probability, depending on how the opponent is playing and how strong our cards are (Section 4).
+Upon recognising strong and weak hands, our agent has to be able to make the right decision (whether to fold, call or bet). We give our agent the ability to make such decisions without being predictable using Counterfactual Regret Minimisation (CFR). Our CFR agent aggregates opponent behaviour (Section 3) using the opponent's betting sequence. At each decision node, the CFR agent takes each action with a certain probability, depending on how the opponent is playing and how strong our cards are (Section 4).
 
-Limitations in the implementation of the CFR agent makes it slow in making real-time decisions. Furthermore, training of the CFR agent is inefficient. We circumvent these time constraints in training and decision-making using a Deep-Q Network (DQN) (Section 5). 
+Limitations in the implementation of the CFR agent makes it slow in making real-time decisions. Furthermore, the training process of the CFR agent is inefficient. We circumvent these time constraints in training and decision-making using a Deep-Q Network (DQN) (Section 5). 
 
 We then discuss the optimality of our agent in exploiting imperfect information and maximising our gains the stochastic game of poker.
 
@@ -47,27 +49,27 @@ We then discuss the optimality of our agent in exploiting imperfect information 
 Poker has a plethora of game states an agent can tap on, such as the hand strength, pot size, money left to name a few. Given the complexity of poker, it would be infeasible to use all the game states in designing our agent. The primary heuristic in a rational poker agent would be the hand strength, because that is how poker's end state is evaluated. The player with the higher hand strength clears the pot. We focus on how we abstracted hand strengths for our agent.
 
 \subsection{Hand Strength}
-There is extensive research on evaluators for mid-game hand strength, such as CactusKev, TwoPlusTwo and 7-card. These evaluators aim to classify cards into groups of similar play styles, which are called buckets. Since hand strengths change across streets as community cards are revealed, the classification key is typically a function of the current hand strength, and the potential hand strength.
+There is extensive research on evaluators for mid-game hand strength, such as CactusKev, TwoPlusTwo and 7-card. Hand evaluators aim to classify cards into groups of similar play styles, which are called buckets. Since hand strengths change across streets as community cards are revealed, the classification key is typically a function of the current hand strength, and the potential hand strength. We considered the theoretical benefits of these methods and the practical limitations of implementation in our final design.
 
 \subsubsection{Card Isomorphism}
 To effectively evaluate hand strengths, it is imperative to simplify the hands using abstraction techniques like card isomorphism. Card isomorphism exploits the fact that a card's suit has no inherent value. It is only useful to know the values of the hole cards and whether they are suited (have the same suit). For example, A$\clubsuit$ A$\clubsuit$ has the same winning chance as A$\spadesuit$ A$\spadesuit$, and these hole cards would be played with similar strategy.
 
-Card isomorphism can reduce the number of game states in the pre-flop street from ${52 \choose 2} = 1326$ to $2 \times {13 \choose 2} + 13 = 169$ states. Each state is identified using the value of the cards, and a boolean indicator if they are the suited or offsuit.
+Card isomorphism can reduce the number of game states in the pre-flop street from ${52 \choose 2} = 1326$ to $2 \times {13 \choose 2}$ offsuit combinations and $13$ suited combinations, for a total of $169$ states. Each state is identified using the value of the cards, and a boolean indicator if they are the suited.
 
 \subsubsection{Percentile Bucketing}
-Unfortunately, card isomorphism does not simplify our the game complexity enough. The $169$ game states in the pre-flop state will exponentially increase as we introduce more information on the pot and betting sequences. We employ a second layer of abstraction, card bucketing, to group cards of similar strengths together. 
+Unfortunately, card isomorphism does not simplify our the game complexity enough. The $169$ game states in the pre-flop state will exponentially increase as we introduce more information on community cards, the pot size and player actions taken. We employ a second layer of abstraction, card bucketing, to group cards of similar strengths together. 
 
-For instance, two sets of hole cards like K$\heartsuit$ Q$\diamondsuit$ and Q$\diamondsuit$ J$\heartsuit$ can be handled with the same strategy. Card bucketing can reduce the branching factor of our game tree.
+For instance, two sets of hole cards like K$\heartsuit$ Q$\diamondsuit$ and Q$\diamondsuit$ J$\heartsuit$ can be handled with the same strategy as they are offsuit highcards with a possibility of completing a straight. Card bucketing can reduce the branching factor of our game tree.
 
-Ganzfried and Sandholm found that using too many buckets meant that the training algorithm could not converge sufficiently fast, eventually setting on a 8-12-4-4 bucket size for the different streets. We simplified their model and chose to use 5 buckets in all streets for our agent. The branching factor is large enough for our agent to differentiate hands, but not too large that any training would be intractable.
+Ganzfried and Sandholm found that using too many buckets meant that the training algorithm could not converge sufficiently fast, eventually setting on a 8-12-4-4 bucket size for the different streets. We simplified their model and chose to use the same bucket size of 5 in all streets for our agent. The branching factor is large enough for our agent to differentiate hands, but not too large that any training would be intractable.
 
-Our heuristic for bucketing is the expected win rate of a hand. We used a Monte-Carlo simulation to generate these win rates, which takes into consideration the current and expected hand strength. In each street (pre-flop, flop, turn, river), we ran a Monte-Carlo Simulation. 1000 different hands were generated each time, with the hands consisting of two pairs of hole cards and 0, 3, 4 or 5 community cards depending on the street. For each of these 1000 hands, 500 Monte-Carlo simulations were run to determine the win rate of the hand.
+Our heuristic for bucketing is the expected win rate of a hand. We used a Monte-Carlo simulation to generate the win rates needed to demarcate two buckets. In each street (pre-flop, flop, turn, river), 1000 different hands were generated. The hands would have  two pairs of hole cards and 0, 3, 4 or 5 community cards depending on the street. For each of these 1000 hands, 500 Monte-Carlo simulations were run to determine the win rate of the hands.
 
-We used a percentile-win-rate clustering method, so the first bucket comprises the 20\% of cards with the lowest win rates. Effectively, each bucket is identified by a minimum and maximum expected win rate. We stored the bucket margins for our CFR agent across different streets, as shown in Appendix A. Each margin demarcates the two adjacent buckets.
+We used a percentile-win-rate clustering method, so the first bucket is marked by the win rate of the hand at the $20^{th}$ percentile. Effectively, each bucket is identified by a minimum and maximum expected win rate. We stored the bucket margins for our CFR agent across different streets, as shown in Appendix A. Each margin demarcates the two adjacent buckets.
 
-Our results demonstrate the effect of imperfect information in hand evaluation. In the pre-flop stage, the difference in win rates of the first and last margin was only $0.182$. This value increased to $0.634$ in the river. Most cards in the pre-flop stage had a fairly similar win rate because of the uncertainty in the community cards. As more information is revealed, the certainty of winning is more finely differentiated as the only unknown factor is the opponent's hands.
+Our results demonstrate the effect of imperfect information in hand evaluation. In the pre-flop stage, the bucket margins were close and the difference in win rates of the first and last margin was only $0.182$. This value increased to $0.634$ in the river, suggesting a greater differentiation in win rates as the game progresses. Most cards in the pre-flop stage had a fairly similar win rate because of the uncertainty in the community cards. As more information is revealed, the uncertainty in the community cards is resolved and the only unknown factor is the opponent's hands.
 
-In bucketing, hands can move into different buckets depending on the community cards that have been shown. Johansen suggests using the bucketing sequence in designing the agent, using information on how the hand has moved between buckets in the game. However, we chose to consider each street of the game as being independent and did not incorporate this into our agent.
+%In bucketing, hands can move into different buckets depending on the community cards that have been shown. Johansen suggests using the bucketing sequence in designing the agent, using information on how the hand has moved between buckets in the game. However, we chose to consider each street of the game as being independent and did not incorporate this into our agent.%
 
 \section{Modelling Player Behaviour}
 why do we need to model player behaviour if cfr approximates a gto solution in the long term fro all strategies? 
@@ -85,12 +87,10 @@ An aggressive play style hopes to maximise the winnings when the hands are stron
 
 An opponent's strategy at one point in time can be represented as a 2-tuple of (tightness, aggressiveness). The tuple represents an instantaneous strategy as the opponent could change over time to adapt their play to our agent.
 
-\subsection{Heuristics for Tightness and Aggressiveness}
+\subsubsection{Heuristics for Tightness and Aggressiveness}
 The interaction with the opponent comes from the betting actions and the showdown. However, not every game ends in a showdown so using card information from the showdown may not be as effective. Hence, our heuristics for player tightness and aggressiveness is derived from the betting actions of folding and raising.
 
-The opponent tightness can be approximated using the folding rate over multiple games. The drawback to using the folding-rate heuristic is that a large number of games is needed to make a prediction. By the time these observations are made, the opponent may have already adopted a different play style.
-
-The opponent aggressiveness can be approximated using the raising rate. We make the assumption that when the opponent has a weak hand, they will only call or fold, and raising is only the result of relatively strong hands.
+%The opponent tightness can be approximated using the folding rate over multiple games. The drawback to using the folding-rate heuristic is that a large number of games is needed to make a prediction. By the time these observations are made, the opponent may have already adopted a different play style. The opponent aggressiveness can be approximated using the raising rate. We make the assumption that when the opponent has a weak hand, they will only call or fold, and raising is only the result of relatively strong hands.%
 
 Our agent incorporates these heuristics into its modelling of the opponent by saving the opponent's action history each round. We extract the betting sequence instead of the raising and folding rate as the betting sequence encapsulates more information while being short enough to track.
 
@@ -100,29 +100,23 @@ Our agent is primarily trained using the Counterfactual Regret Minimisation (CFR
 
 \subsection{Regret Matching}
 
-Regret is a concept of reward relative to an action, and can be positive or negative. It measures how much the agent retrospectively wants to take the action, given the past observations. Regret is then proportional to the loss observed, when the agent did not play the action. Effectively, the agent favours actions that score the highest in the regret heuristic. 
-
-Given the current agent strategy $s$, every action $x$ has a regret value that can be formalised:
+Regret is a concept of reward relative to an action, and can be positive or negative. It measures how much the agent retrospectively wants to take the action, given the past observations. Regret is then proportional to the loss observed, when the agent did not play the action. Effectively, the agent favours actions that score the highest in the regret heuristic. Every action $x$ has a regret value that can be formalised:
 
 \begin{center}
-$ActionUtility(x) = E(\{x\})$
-
-$CurrentUtility() = E(s)$
-
 $Regret(x) = ActionUtility(x) - CurrentUtility()$
 \end{center}
 
 The regret of an action is how much more the agent expects to win by always playing the action (ActionUtility) vis-a-vis the amount the agent expects to win with its current strategy (CurrentUtility).
 
-$s$ changes based on the updated regrets of the actions. The regret-based agent is engages in reinforcement learning to update its beliefs about each action's regret. Later on, we discuss the convergence of this iterative self-play.
+The strategy changes based on the updated regrets of the actions. The regret-based agent is engages in reinforcement learning to update its beliefs about each action's regret. Later on, we discuss the convergence of this iterative self-play.
 
-The agent plays the actions with a normalised probability proportional to their positive regrets. Note that the agent will only take actions that have a positive regret. We work with a discrete probability distribution that can be represented as a 3-tuple for the probability of playing each action (fold, call, raise). For example, one of the tuples generated could be (0.2, 0.3, 0.5).
+The agent plays the actions with a normalised probability proportional to their positive regrets. Note that the agent will only take actions that have a positive regret, as these actions can increase the utility. Our agent generates a 3-tuple for the optimal probability of playing each action (fold, call, raise). For example, one of the tuples generated could be (0.2, 0.3, 0.5).
 
 \subsubsection{CFR - Extending Regret Matching}
 
-Poker has a large game tree and chance nodes which generate the community cards, making it problematic to accurately define the utility at each terminal node. CFR then extends Regret Matching in sequential games with chance nodes.
+Unfortunately, poker has a large game tree and chance nodes which generate the community cards, making it problematic to accurately define the utility at each terminal node. CFR then extends Regret Matching in sequential games with chance nodes.
 
-The chance nodes arise from the probabilistic draws of community cards. The counterfactual component takes into account the chance of each decision being made, and the expected utility from that node. The game tree is further complicated because each weighted decision leads to more decisions. Clearly, this is where abstraction is key in clustering nodes together, via the bucketing strategies we discussed earlier. At each chance node, the branching factor is then limited to the number of buckets.
+The chance nodes arise from the probabilistic draws of community cards. The agent is counterfactual as it takes into account the chance of each decision being made, and the expected utility from that node. The game tree is further complicated because each decision node continues branching. Clearly, this is where abstraction is key in clustering nodes together, via the bucketing strategies we discussed earlier. At each chance node, the branching factor is then limited to the number of buckets.
 
 Through iterative self-play, the agent updates the regret values over the entire tree.
 
@@ -130,20 +124,21 @@ Through iterative self-play, the agent updates the regret values over the entire
 
 In \textit{The Mathematics of Poker}, Chen and Ankenman discuss "game-theory optimal" (GTO) solutions in two and three-player variants. They assert that in poker tournaments with more than three players, there could be implicit collusion between players and hence there is no unexploitable strategy. However, when considering two-player games, then a Nash Equilibrium does exist. 
 
-Over time, we expect the absolute regret for each action to be minimised. Intuitively, the minimisation occurs because regret is undesirable. Suppose that $\exists$ action $x : Regret(x)$ is not the minimised. Since there exists a lower regret value for action $x$, and given that $ActionUtility(x)$ is constant, then there exists a higher $CurrentUtility()$ value when playing action $x$. Since our agent is probabilistic, it will take action $x$ with a non-zero probability. By Murphy's Law, this will take place with a  sufficiently large number of training cycles. Then, the agent will discover the higher $CurrentUtility()$ including action $x$. As $CurrentUtility$ increases, $Regret(x)$ decreases to an eventual minimum.
+Over time, we expect the absolute regret for each action to be minimised. Intuitively, the minimisation occurs because regret is undesirable. 
 
-** CAN ALSO DISCUSS WHY THERE EXISTS A MINIMUM FOR ALL REGRET VALUES (As the regret decreases, agent plays that action less, which will only increase the regret of that action?)
+%Suppose that $\exists$ action $x : Regret(x)$ is not the minimised. Since there exists a lower regret value for action $x$, and given that $ActionUtility(x)$ is constant, then there exists a higher $CurrentUtility()$ value when playing action $x$. Since our agent is probabilistic, it will take action $x$ with a non-zero probability. By Murphy's Law, this will take place with a  sufficiently large number of training cycles. Then, the agent will discover the higher $CurrentUtility()$ including action $x$. As $CurrentUtility$ increases, $Regret(x)$ decreases to an eventual minimum.%
 
-$Regret(x)$ is inversely proportional to $CurrentUtility$. From the above claim, $\forall x, Regret(x)$ is minimised. The minimisation of regret is also the maximisation of $CurrentUtility$. Eventually, the CFR agent converges to an equilibrium.
+%** CAN ALSO DISCUSS WHY THERE EXISTS A MINIMUM FOR ALL REGRET VALUES (As the regret decreases, agent plays that action less, which will only increase the regret of that action?)%
 
-In training our CFR agent, we used xx cycles. We find this to be a sufficiently large number of training cycles because.....
+$Regret(x)$ is inversely proportional to $CurrentUtility$. The minimisation of regret is also the maximisation of $CurrentUtility$. Eventually, the CFR agent converges to an equilibrium where its utility is fairly constant against all agents.
+
+In training our CFR agent, we used xx cycles. We find this to be a sufficiently large number of training cycles because..... Training was slow...
 
 \subsubsection{Unexploitability of CFR Agent}
 
 The basis of CFR agents is that they are unexploitable in the long term, regardless of the strategy played by the opponent. In the training stage, the utility is maximised over all betting sequences, so the CFR agent has already taken into consideration different play styles.
 
-*How does maximising utility mean that we cannot be exploited?
-*does our agent sweep or gain slight advantages over the 10000 mark?implications of being unexploitable>
+%*How does maximising utility mean that we cannot be exploited? *does our agent sweep or gain slight advantages over the 10000 mark?implications of being unexploitable>%
 
 While an agent following an optimal strategy may not win the most amount of money from their opponents, they cannot be exploited in the long run. 
 
@@ -182,7 +177,9 @@ We introduce a more stable training environment for our agent using a DQN with t
 
 The Q-values are learned by playing against different players ( then how is this reinforcement learning?)
 
-\subsection{Initial Training with Simple Heuristic Players}
+\subsection{Reinforcement Learning Process}
+
+\subsubsection{Playing against Simple Heuristics Players}
 A basic agent should win against the RandomPlayer and HonestPlayer, which are provided in the engine.
 
 Training against RandomPlayer teaches our agent to play rational, statistically-optimising actions. Our agent will learn to make bets on strong hands and fold on weaker ones. 
@@ -191,7 +188,7 @@ Given the training against RandomPlayer, we extend the training against HonestPl
 
 We verified Yakovenko's claim, and it is true that our agent is able to win against RandomPlayer (19980-0) and HonestPlayer (20000-0) after 1 game of 500 rounds. More tests can be done to determine the statistical significance of this result. We omit this section because our goal is not to win against RandomPlayer and HonestPlayer.
 
-\subsection{Reinforcement Learning with CFR Agent}
+\subsubsection{Playing against CFR Agent}
 
 -- explain why we train with CFR agent
 
