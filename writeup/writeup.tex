@@ -128,20 +128,6 @@ Clearly, this is where abstraction is key in clustering nodes together, via the 
 
 Through iterative self-play, the agent updates the regret values over the entire tree.
 
-\subsection{Nash Equlibrium}
-
-In \textit{The Mathematics of Poker}, Chen and Ankenman discuss "game-theory optimal" (GTO) solutions in two and three-player variants. They assert that in poker tournaments with more than three players, there could be implicit collusion between players and hence there is no unexploitable strategy. However, when considering two-player games, then a Nash Equilibrium does exist. Zinkevich et al also assert the convergence of CFR agents towards a Nash Equilibrium.
-
-In particular, we expect the absolute regret for each action to be minimised over time. Intuitively, the minimisation occurs because regret is undesirable - the agent will play actions they regretted not playing, thereby increasing their expected reward (CurrentUtility). The added benefit of playing the action is then reduced, in turn minimising the regret.
-
-%Suppose that $\exists$ action $x : Regret(x)$ is not the minimised. Since there exists a lower regret value for action $x$, and given that $ActionUtility(x)$ is constant, then there exists a higher $CurrentUtility()$ value when playing action $x$. Since our agent is probabilistic, it will take action $x$ with a non-zero probability. By Murphy's Law, this will take place with a  sufficiently large number of training cycles. Then, the agent will discover the higher $CurrentUtility()$ including action $x$. As $CurrentUtility$ increases, $Regret(x)$ decreases to an eventual minimum.%
-
-%** CAN ALSO DISCUSS WHY THERE EXISTS A MINIMUM FOR ALL REGRET VALUES (As the regret decreases, agent plays that action less, which will only increase the regret of that action?)%
-
-$Regret(x)$ is inversely proportional to $CurrentUtility$. The minimisation of regret is also the maximisation of $CurrentUtility$. Eventually, the CFR agent converges to an equilibrium where its utility is fairly constant against all agents.
-
-In training our CFR agent, we used xx cycles. We find this to be a sufficiently large number of training cycles because..... Training was slow...
-
 \subsection{Randomising Strategy}
 
 The exploitability of opponent behaviour is symmetric, so our agent has to acknowledge that the opponent can similarly extract patterns from our play style. It would then be beneficial to either mask our agent's biases or change our play style during the game.
@@ -158,6 +144,20 @@ However, we argue against purification because noise in our player behaviour can
 Besides using noise to generate randomness, we can also change our play style to obfuscate our opponents. Given the same hand as above, our agent may instead generate a 3-tuple like (0, 0.3, 0.7), displaying a significantly higher aggressiveness. We can draw an analogy to local-hill search, where continually exploiting the same strategy may just be leading us to local maxima. The sudden exploration could be less optimal, but may also lead us to an improved maxima.
 
 However, this method is incompatible with our CFR agent. The trained regret values would have converged after numerous training cycles, and are guaranteed to be unexploitable in the long term for all strategies. Using a different strategy exposes a vulnerability to opponents, making the CFR exploitable by certain strategies.
+
+\subsection{Nash Equlibrium}
+
+In \textit{The Mathematics of Poker}, Chen and Ankenman discuss "game-theory optimal" (GTO) solutions in two and three-player variants. They assert that in poker tournaments with more than three players, there could be implicit collusion between players and hence there is no unexploitable strategy. However, when considering two-player games, then a Nash Equilibrium does exist. Zinkevich et al also assert the convergence of CFR agents towards a Nash Equilibrium.
+
+In particular, we expect the absolute regret for each action to be minimised over time. Intuitively, the minimisation occurs because regret is undesirable - the agent will play actions they regretted not playing, thereby increasing their expected reward (CurrentUtility). The added benefit of playing the action is then reduced, in turn minimising the regret.
+
+%Suppose that $\exists$ action $x : Regret(x)$ is not the minimised. Since there exists a lower regret value for action $x$, and given that $ActionUtility(x)$ is constant, then there exists a higher $CurrentUtility()$ value when playing action $x$. Since our agent is probabilistic, it will take action $x$ with a non-zero probability. By Murphy's Law, this will take place with a  sufficiently large number of training cycles. Then, the agent will discover the higher $CurrentUtility()$ including action $x$. As $CurrentUtility$ increases, $Regret(x)$ decreases to an eventual minimum.%
+
+%** CAN ALSO DISCUSS WHY THERE EXISTS A MINIMUM FOR ALL REGRET VALUES (As the regret decreases, agent plays that action less, which will only increase the regret of that action?)%
+
+$Regret(x)$ is inversely proportional to $CurrentUtility$. The minimisation of regret is also the maximisation of $CurrentUtility$. Eventually, the CFR agent converges to an equilibrium where its utility is fairly constant against all agents.
+
+In training our CFR agent, we used xx cycles. We find this to be a sufficiently large number of training cycles because..... Training was slow...
 
 \subsubsection{Unexploitability of CFR Agent}
 
@@ -189,7 +189,7 @@ By stabilising the training, our Q-values can converge much faster than a CFR tr
 
 \subsection{Reinforcement Learning Process}
 
-Our DQN observes the gameplay between two agents, then learns from the gameplay to update the Q-value. We first observe RandomPlayer and HonestPlayer against each other, before observing RandomPlayer against our CFR agent.
+Our DQN observes the gameplay between two agents, then learns from the gameplay to update the Q-value of taking each action. We first observe RandomPlayer and HonestPlayer against each other, before observing RandomPlayer against our CFR agent.
 
 \subsubsection{Playing against Simple Heuristics Players}
 A basic agent should win against the RandomPlayer and HonestPlayer, which are provided in the engine. Our agent observed 5000 games of 1000 rounds each, which took about 1 day to complete.
